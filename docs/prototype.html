@@ -1,0 +1,745 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Derry Meiraldy — prototipe portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,900&family=Archivo+Narrow:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#14110F; --indigo:#1A1F3D; --indigo-deep:#0C0F22;
+  --parch:#E3D9C6; --parch-dim:#8E8574; --rule:#3A342C;
+  --ochre:#C8973F; --rust:#8C2B24; --mag:#C4415C; --cut:8deg;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--parch);font-family:"Archivo Narrow",system-ui,sans-serif;overflow-x:hidden}
+body.locked{overflow:hidden}
+canvas#focal{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.15;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 45%,transparent 40%,rgba(6,5,4,.85) 100%)}
+.serif{font-family:"Fraunces",Georgia,serif}
+.mono{font-family:"JetBrains Mono",monospace}
+.eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--parch-dim)}
+.diamond{color:var(--ochre)}
+
+.screen{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;
+  flex-direction:column;background:linear-gradient(180deg,var(--ink) 0%,var(--indigo-deep) 100%)}
+.screen.on{display:flex}
+
+#s-title{cursor:pointer;background:transparent;gap:0}
+.wordmark{width:min(1080px,88vw);height:auto;display:block}
+.wm{font-family:"Fraunces",serif;font-weight:900;font-size:132px;letter-spacing:-.03em}
+.wm-sub{font-family:"Archivo Narrow",sans-serif;font-size:19px;letter-spacing:.52em;fill:#E3D9C6}
+#s-title .cue{margin-top:30px;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.wash{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.55}
+
+#wipe{position:fixed;z-index:80;inset:-30% -10%;background:var(--ink);
+  transform:translateX(-125%) rotate(var(--cut));transform-origin:center;pointer-events:none}
+#wipe.in{transform:translateX(0) rotate(var(--cut));transition:transform .22s cubic-bezier(.7,0,.3,1)}
+#wipe.out{transform:translateX(125%) rotate(var(--cut));transition:transform .2s cubic-bezier(.7,0,.3,1)}
+
+#rail{position:fixed;left:0;top:0;bottom:0;z-index:40;width:62px;display:none;flex-direction:column;
+  justify-content:center;gap:2px;border-right:1px solid var(--rule);background:rgba(12,10,9,.72);
+  backdrop-filter:blur(6px);transition:width .18s ease}
+#rail.on{display:flex}
+#rail:hover,#rail:focus-within{width:196px}
+.rail-item{display:flex;align-items:center;gap:14px;padding:13px 0 13px 20px;background:none;border:0;
+  color:var(--parch-dim);cursor:pointer;font-family:inherit;font-size:13px;letter-spacing:.16em;
+  text-transform:uppercase;white-space:nowrap;text-align:left;border-left:2px solid transparent}
+.rail-item .dia{font-size:9px;opacity:0;transition:opacity .15s}
+.rail-item .lbl{opacity:0;transition:opacity .18s}
+#rail:hover .lbl,#rail:focus-within .lbl{opacity:1}
+.rail-item:hover,.rail-item:focus-visible{color:var(--parch);outline:none}
+.rail-item[aria-current="true"]{color:var(--ochre);border-left-color:var(--ochre)}
+.rail-item[aria-current="true"] .dia{opacity:1}
+
+#hub{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;
+  padding:70px 4vw 70px 9vw;overflow:hidden}
+.cascade{position:relative;z-index:3;display:flex;flex-direction:column;align-items:flex-start}
+.menu-item{background:none;border:0;padding:0;cursor:pointer;color:var(--parch);position:relative;
+  text-align:left;display:block;margin-left:calc(var(--i) * 1.9vw);
+  transform:rotate(calc(var(--r) * 1deg));transform-origin:left center;transition:transform .2s}
+.menu-item .w{position:relative;z-index:2;display:block;font-family:"Fraunces",serif;font-weight:900;
+  line-height:.84;letter-spacing:-.035em;font-size:clamp(31px,calc(var(--fs) * 1vw),118px);
+  transition:color .16s}
+.menu-item .s{position:relative;z-index:2;display:block;font-family:"Archivo Narrow",sans-serif;
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--parch-dim);
+  margin:1px 0 9px 3px;transition:color .16s}
+.menu-item .slash{position:absolute;left:-16px;right:-26px;top:9%;bottom:30%;background:var(--rust);
+  z-index:1;transform:scaleX(0);transform-origin:left center;filter:url(#rough);
+  transition:transform .24s cubic-bezier(.7,0,.3,1)}
+.menu-item.sel .slash,.menu-item:hover .slash{transform:scaleX(1)}
+.menu-item.sel,.menu-item:hover{transform:rotate(calc(var(--r) * 1deg)) translateX(11px)}
+.menu-item.sel .s,.menu-item:hover .s{color:var(--parch)}
+.menu-item:focus-visible{outline:1px solid var(--ochre);outline-offset:6px}
+.hub-meta{position:absolute;right:3vw;bottom:36px;width:min(310px,42vw);z-index:3;
+  transform:skewX(-9deg);border-left:2px solid var(--ochre)}
+.hub-meta .row{display:flex;gap:12px;padding:8px 15px;background:rgba(12,15,34,.8);
+  border-bottom:1px solid var(--rule);font-size:12px}
+.hub-meta .row span:first-child{transform:skewX(9deg);color:var(--parch-dim);
+  letter-spacing:.16em;text-transform:uppercase;font-size:10px;min-width:72px;padding-top:2px}
+.hub-meta .row span:last-child{transform:skewX(9deg);line-height:1.5}
+
+main{position:relative;z-index:10}
+section{padding:118px 8vw 118px 14vw;border-top:1px solid var(--rule);background:var(--ink)}
+section:nth-of-type(even){background:var(--indigo-deep)}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:12px}
+.sec-head h2{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(28px,4vw,44px);letter-spacing:-.015em}
+.sec-lede{color:var(--parch-dim);max-width:56ch;line-height:1.75;font-size:15px;margin-bottom:52px}
+.grid{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+.cell{background:var(--ink);padding:26px 28px 30px}
+section:nth-of-type(even) .cell{background:var(--indigo-deep)}
+.cell h3{font-family:"Fraunces",serif;font-weight:500;font-size:21px;margin-bottom:4px}
+.cell .tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre)}
+.cell p{color:var(--parch-dim);line-height:1.7;font-size:14px;margin-top:12px}
+.stack-row{margin-top:16px;font-size:12px;color:var(--parch-dim)}
+.stats{display:grid;gap:34px}
+@media(min-width:760px){.stats{grid-template-columns:repeat(2,1fr);gap:34px 60px}}
+.stat-group h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);
+  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+.bar{display:flex;align-items:center;gap:12px;padding:6px 0;font-size:13px}
+.bar .n{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ochre)}
+.bar .track{width:88px;height:2px;background:var(--rule)}
+.bar .fill{height:2px;background:var(--ochre)}
+.prose{max-width:62ch;line-height:1.85;color:var(--parch-dim);font-size:15px}
+.prose p+p{margin-top:18px}
+.prose strong{color:var(--parch);font-weight:400}
+.facts{margin-top:40px;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);max-width:62ch}
+.fact{background:var(--ink);padding:14px 20px;display:flex;gap:20px;font-size:13px}
+section:nth-of-type(even) .fact{background:var(--indigo-deep)}
+.fact span:first-child{color:var(--parch-dim);min-width:120px;letter-spacing:.1em;text-transform:uppercase;font-size:11px;padding-top:2px}
+.links{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+.lk{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid var(--rule);
+  color:var(--parch);text-decoration:none;background:none;font-family:inherit;cursor:pointer;
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:.15s}
+.lk:hover{border-color:var(--ochre);color:var(--ochre)}
+
+/* ============ battle ============ */
+#s-battle{justify-content:stretch;padding:0;background:radial-gradient(ellipse at 62% 40%,#1B2140 0%,var(--ink) 62%)}
+.b-scene{position:relative;flex:1;width:100%;overflow:hidden}
+
+.b-splat{position:absolute;left:-4%;top:6%;width:min(620px,58vw);opacity:.5;pointer-events:none}
+.b-splat path{mix-blend-mode:screen}
+
+.b-mark{position:absolute;left:4vw;top:34px;transform:rotate(-6deg);transform-origin:left center}
+.b-mark .lbl{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--parch-dim)}
+.b-mark h2{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(19px,2.4vw,27px);margin-top:3px}
+
+.b-fan{position:absolute;left:3.5vw;top:50%;transform:translateY(-46%) rotate(-7deg);
+  transform-origin:left center;display:flex;flex-direction:column;gap:8px;z-index:3}
+.fan{display:flex;align-items:center;gap:13px;background:none;border:0;cursor:pointer;
+  color:var(--parch);font-family:inherit;padding:5px 14px 5px 5px;text-align:left;
+  transition:transform .16s,opacity .16s;opacity:.72}
+.fan:nth-child(1){margin-left:0}
+.fan:nth-child(2){margin-left:26px}
+.fan:nth-child(3){margin-left:52px}
+.fan:nth-child(4){margin-left:78px}
+.fan:hover{opacity:1;transform:translateX(7px)}
+.fan:focus-visible{outline:1px solid var(--ochre);outline-offset:2px}
+.fan .key{width:31px;height:31px;flex:none;border:1px solid var(--parch-dim);border-radius:50%;
+  display:grid;place-items:center;font-family:"JetBrains Mono",monospace;font-size:12px;
+  color:var(--parch-dim);transition:.16s}
+.fan .big{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(19px,2.7vw,34px);line-height:.92;
+  display:block;letter-spacing:-.025em;text-shadow:0 3px 0 rgba(10,8,7,.55)}
+.fan .sm{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--parch-dim);display:block;margin-top:3px}
+.fan[aria-pressed="true"]{opacity:1;transform:translateX(12px)}
+.fan[aria-pressed="true"] .key{border-color:var(--ochre);background:var(--ochre);color:#14110F}
+.fan[aria-pressed="true"] .big{color:var(--ochre)}
+
+.b-threats{position:absolute;inset:0;pointer-events:none;z-index:2}
+.threat{position:absolute;display:flex;align-items:center;background:none;border:0;padding:0;
+  cursor:pointer;pointer-events:auto;color:var(--parch);font-family:inherit;
+  transition:transform .18s;transform-origin:center}
+.threat:hover{transform:scale(1.05)}
+.threat:focus-visible{outline:1px solid var(--ochre);outline-offset:6px}
+.threat .halo{position:relative;flex:none}
+.threat .halo::after{content:"";position:absolute;inset:-13px;border:1px dashed var(--parch-dim);
+  border-radius:50%;opacity:0;transition:opacity .18s}
+.threat.sel .halo::after{opacity:.9;border-color:var(--mag);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.threat .tie{width:38px;height:1px;background:var(--parch-dim);flex:none}
+.threat.sel .tie{background:var(--mag)}
+.threat .plate{transform:rotate(-5deg);padding:5px 14px 6px;background:rgba(14,11,9,.82);
+  border-left:2px solid var(--mag);text-align:left;white-space:nowrap}
+.threat .nm{font-family:"Fraunces",serif;font-weight:500;font-size:15px;display:block}
+.threat .lv{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;
+  color:var(--parch-dim);display:block}
+.sig{width:96px;height:96px;display:block}
+.sig circle,.sig polygon,.sig line{fill:none;stroke:var(--ochre);stroke-width:1;opacity:.55;transition:opacity .18s}
+.sig .solid{fill:var(--ochre);stroke:none}
+.threat:hover .sig circle,.threat:hover .sig polygon,.threat:hover .sig line,
+.threat.sel .sig circle,.threat.sel .sig polygon,.threat.sel .sig line{opacity:1}
+.b-enter{animation:slideIn .38s cubic-bezier(.2,.7,.25,1) both}
+.threat:nth-child(2).b-enter{animation-delay:.07s}
+.threat:nth-child(3).b-enter{animation-delay:.14s}
+@keyframes slideIn{from{opacity:0;transform:translateX(64px)}to{opacity:1;transform:none}}
+
+.b-party{position:absolute;right:2.4vw;bottom:16px;width:min(310px,46vw);z-index:3;
+  transform:skewX(-9deg);border-left:2px solid var(--ochre)}
+.party-row{display:flex;align-items:center;gap:12px;padding:7px 14px;background:rgba(12,15,34,.8);
+  border-bottom:1px solid var(--rule);font-size:12.5px}
+.party-row span:first-child{transform:skewX(9deg)}
+.party-row .lv{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:11px;
+  color:var(--ochre);transform:skewX(9deg)}
+
+.b-hints{width:100%;display:flex;gap:22px;align-items:center;padding:13px 3.5vw;
+  border-top:1px solid var(--rule);background:rgba(10,8,7,.75);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--parch-dim);flex-wrap:wrap}
+.b-hints button{background:none;border:0;color:inherit;font:inherit;letter-spacing:inherit;
+  text-transform:inherit;cursor:pointer}
+.b-hints button:hover{color:var(--ochre)}
+
+/* ============ threat detail ============ */
+#s-threat{justify-content:flex-start;overflow-y:auto;background:var(--ink)}
+.t-band{width:100%;padding:64px 6vw 30px;background:var(--indigo-deep);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 calc(100% - 42px))}
+.t-band .eyebrow{margin-bottom:14px}
+.t-band h2{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(30px,6vw,58px);
+  letter-spacing:-.02em;line-height:1.05;max-width:16ch}
+.t-weak{display:inline-flex;align-items:center;gap:12px;margin-top:26px;padding:11px 20px;
+  border:1px solid var(--rust);font-size:13px}
+.t-weak b{color:var(--rust);font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.t-body{width:100%;padding:20px 6vw 70px;display:grid;gap:46px;max-width:1100px}
+@media(min-width:860px){.t-body{grid-template-columns:1.15fr .85fr}}
+.t-body .prose{max-width:52ch}
+.t-proof{border:1px solid var(--rule);padding:24px 26px 28px}
+.t-proof h4{font-family:"Fraunces",serif;font-weight:500;font-size:19px;margin:10px 0 10px}
+.t-proof p{font-size:13.5px;color:var(--parch-dim);line-height:1.7}
+.t-nav{display:flex;gap:12px;padding:0 6vw 70px;flex-wrap:wrap}
+
+.hint{position:fixed;right:20px;bottom:18px;z-index:45;font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--parch-dim);display:none}
+.hint.on{display:block}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--rule);padding:2px 6px;font-size:10px;color:var(--parch)}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01s!important;transition-duration:.01s!important}
+  html{scroll-behavior:auto}
+}
+
+@media(max-width:900px){
+  .b-splat{opacity:.3;width:110%;left:-16%}
+  .b-mark{position:static;transform:none;padding:22px 6vw 0}
+  .b-scene{display:flex;flex-direction:column;overflow-y:auto}
+  .b-threats{position:static;padding:16px 6vw 0;display:flex;flex-direction:column;gap:12px}
+  .threat{position:static!important;transform:none!important;width:100%;gap:0}
+  .threat .plate{white-space:normal;flex:1}
+  .sig{width:56px;height:56px}
+  .threat .tie{width:20px}
+  .b-fan{position:static;transform:none;flex-direction:row;flex-wrap:wrap;gap:0;padding:20px 6vw 0}
+  .fan{margin-left:0!important;flex:1 1 46%;padding:8px 6px}
+  .fan .big{font-size:16px}
+  .fan .sm{display:none}
+  .b-party{position:static;transform:none;margin:22px 6vw 24px;width:auto}
+  .party-row span:first-child,.party-row .lv{transform:none}
+  .b-hints span{display:none}
+}
+@media(max-width:700px){
+  #rail{width:100%;top:auto;bottom:0;height:56px;flex-direction:row;justify-content:space-around;
+    border-right:0;border-top:1px solid var(--rule)}
+  #rail:hover,#rail:focus-within{width:100%}
+  .rail-item{padding:0 8px;flex-direction:column;gap:4px;justify-content:center;font-size:10px;
+    border-left:0;border-bottom:2px solid transparent}
+  .rail-item[aria-current="true"]{border-left-color:transparent;border-bottom-color:var(--ochre)}
+  .rail-item .lbl{opacity:1}
+  #hub{padding:80px 6vw 90px}
+  .cascade{align-items:stretch}
+  .menu-item{margin-left:calc(var(--i) * .9vw)}
+  .hub-meta{position:static;transform:none;margin-top:34px;width:auto}
+  .hub-meta .row span{transform:none!important}
+  section{padding-left:7vw;padding-right:7vw}
+  .hint{display:none!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="rough" x="-20%" y="-30%" width="140%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.016 0.03" numOctaves="4" seed="11" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+<canvas id="focal"></canvas>
+<div class="vig"></div>
+<div class="grain"></div>
+<div id="wipe"></div>
+
+<nav id="rail" aria-label="Navigasi utama">
+  <button class="rail-item" data-warp="start"><span class="dia">◆</span><span class="lbl">Start</span></button>
+  <button class="rail-item" data-warp="project"><span class="dia">◆</span><span class="lbl">Project</span></button>
+  <button class="rail-item" data-warp="skill"><span class="dia">◆</span><span class="lbl">Skill</span></button>
+  <button class="rail-item" data-warp="about"><span class="dia">◆</span><span class="lbl">About</span></button>
+  <button class="rail-item" data-warp="contact"><span class="dia">◆</span><span class="lbl">Contact</span></button>
+</nav>
+
+<div id="hub">
+  <svg class="wash" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g filter="url(#rough)">
+      <path fill="#2E7C8E" opacity=".4" d="M40 60h520v330H40z"/>
+      <path fill="#8C2B24" opacity=".34" d="M120 300h430v260H120z"/>
+      <path fill="#C8973F" opacity=".16" d="M420 120h340v220H420z"/>
+    </g>
+  </svg>
+
+  <div class="cascade" role="menu">
+    <button class="menu-item" role="menuitem" data-warp="start"   style="--i:0;--fs:9.4;--r:-2.2">
+      <span class="slash"></span><span class="w">Start</span><span class="s">Empat medan</span></button>
+    <button class="menu-item" role="menuitem" data-warp="project" style="--i:1;--fs:8.5;--r:-1">
+      <span class="slash"></span><span class="w">Project</span><span class="s">Enam karya</span></button>
+    <button class="menu-item" role="menuitem" data-warp="skill"   style="--i:2.4;--fs:7.8;--r:.4">
+      <span class="slash"></span><span class="w">Skill</span><span class="s">Status</span></button>
+    <button class="menu-item" role="menuitem" data-warp="about"   style="--i:4;--fs:7.1;--r:1.8">
+      <span class="slash"></span><span class="w">About</span><span class="s">Riwayat</span></button>
+    <button class="menu-item" role="menuitem" data-warp="contact" style="--i:6;--fs:6.5;--r:3.2">
+      <span class="slash"></span><span class="w">Contact</span><span class="s">Surat</span></button>
+  </div>
+
+  <div class="hub-meta">
+    <div class="row"><span>Nama</span><span>Derry Meiraldy</span></div>
+    <div class="row"><span>Lokasi</span><span>Pontianak, Kalimantan Barat</span></div>
+    <div class="row"><span>Pola</span><span>Logika murni di inti, antarmuka jadi pembaca</span></div>
+  </div>
+</div>
+
+<main>
+  <section id="project">
+    <div class="sec-head"><span class="diamond">◆</span><h2>Project</h2></div>
+    <p class="sec-lede">Enam proyek yang saya kerjakan sampai selesai. Setiap satunya punya modul logika yang berdiri sendiri tanpa framework antarmuka.</p>
+    <div class="grid">
+      <article class="cell"><span class="tag">iOS</span><h3>Patungan</h3>
+        <p>Aplikasi patungan tagihan. Empat modul Swift murni: pembagian sisa terbesar, penyederhanaan utang, OCR struk lewat Vision, dan buku besar.</p>
+        <p class="stack-row mono">SwiftUI · SwiftData · Vision</p></article>
+      <article class="cell"><span class="tag">iOS</span><h3>StepOut</h3>
+        <p>Roguelite dengan inti permainan sebagai Swift Package tanpa satu pun import SpriteKit. RNG berbenih, penjadwal giliran, dan harness penyeimbang 2.000 run.</p>
+        <p class="stack-row mono">SpriteKit · Swift Package</p></article>
+      <article class="cell"><span class="tag">Flutter</span><h3>DomPet</h3>
+        <p>Pencatat keuangan dengan pemindaian struk di perangkat dan masukan suara. Akurasi OCR 83%, skor uji penerimaan 88%, 85 unit test.</p>
+        <p class="stack-row mono">Flutter · Firebase · ML Kit</p></article>
+      <article class="cell"><span class="tag">Web</span><h3>NULLFEED</h3>
+        <p>Halaman promo horor yang digerakkan scroll. Shader GLSL sendiri, ikosahedron yang meluruh, dan pipeline post-processing.</p>
+        <p class="stack-row mono">SvelteKit · Threlte · GLSL</p></article>
+      <article class="cell"><span class="tag">iOS</span><h3>Lantang</h3>
+        <p>Pelatih berbicara di depan umum berbahasa Indonesia, berjalan penuh di perangkat. Pengukuran deterministik dulu, model bahasa hanya di lapisan penyampaian.</p>
+        <p class="stack-row mono">Foundation Models · Swift</p></article>
+      <article class="cell"><span class="tag">Godot</span><h3>Emberfall</h3>
+        <p>Demo JRPG HD-2D dengan mekanik Break dan Turn Weaving. Logika pertarungan murni di <span class="mono">core/</span>, node hanya menampilkan.</p>
+        <p class="stack-row mono">Godot 4.5 · GDScript</p></article>
+    </div>
+  </section>
+
+  <section id="skill">
+    <div class="sec-head"><span class="diamond">◆</span><h2>Skill</h2></div>
+    <p class="sec-lede">Angka di sini menandai seberapa dalam saya pernah masuk, bukan seberapa lama saya menyentuhnya.</p>
+    <div class="stats">
+      <div class="stat-group"><h4>Mobile</h4>
+        <div class="bar">Swift, SwiftUI<span class="track"><span class="fill" style="width:82%"></span></span><span class="n">82</span></div>
+        <div class="bar">Flutter, Dart<span class="track"><span class="fill" style="width:76%"></span></span><span class="n">76</span></div>
+        <div class="bar">SwiftData<span class="track"><span class="fill" style="width:68%"></span></span><span class="n">68</span></div></div>
+      <div class="stat-group"><h4>Web</h4>
+        <div class="bar">TypeScript<span class="track"><span class="fill" style="width:85%"></span></span><span class="n">85</span></div>
+        <div class="bar">Next.js, React<span class="track"><span class="fill" style="width:84%"></span></span><span class="n">84</span></div>
+        <div class="bar">Three.js, GLSL<span class="track"><span class="fill" style="width:61%"></span></span><span class="n">61</span></div></div>
+      <div class="stat-group"><h4>Backend</h4>
+        <div class="bar">Laravel, PHP<span class="track"><span class="fill" style="width:72%"></span></span><span class="n">72</span></div>
+        <div class="bar">Prisma, PostgreSQL<span class="track"><span class="fill" style="width:70%"></span></span><span class="n">70</span></div>
+        <div class="bar">Python, scikit-learn<span class="track"><span class="fill" style="width:64%"></span></span><span class="n">64</span></div></div>
+      <div class="stat-group"><h4>Game</h4>
+        <div class="bar">Godot, GDScript<span class="track"><span class="fill" style="width:66%"></span></span><span class="n">66</span></div>
+        <div class="bar">SpriteKit<span class="track"><span class="fill" style="width:63%"></span></span><span class="n">63</span></div>
+        <div class="bar">Desain sistem<span class="track"><span class="fill" style="width:74%"></span></span><span class="n">74</span></div></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="sec-head"><span class="diamond">◆</span><h2>About</h2></div>
+    <div class="prose">
+      <p>Saya lulusan Informatika Universitas Bina Sarana Informatika di Pontianak. Skripsi saya adalah <strong>DomPet</strong>, aplikasi keuangan dengan pemindaian struk di perangkat, dan proses itu yang membuat saya berhenti menganggap pengujian sebagai formalitas.</p>
+      <p>Sejak itu setiap proyek saya susun dengan cara yang sama: logika yang bisa salah dipisahkan ke modul murni, diuji tanpa membuka simulator, lalu antarmuka menempel di atasnya. Cara ini membuat saya bisa pindah antara Swift, TypeScript, dan GDScript tanpa memulai dari nol.</p>
+      <p>Di luar itu saya main gitar dengan telinga, bukan dengan teori, dan sedang menyusun demo JRPG di Godot.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><span>Studio</span><span>Uneed Developer, pengembang mobile dan web</span></div>
+      <div class="fact"><span>Magang</span><span>Diskominfo Provinsi Kalimantan Barat</span></div>
+      <div class="fact"><span>Sertifikasi</span><span>Program Analyst, BNSP</span></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head"><span class="diamond">◆</span><h2>Contact</h2></div>
+    <p class="sec-lede">Kalau ada yang ingin dibangun, atau sekadar ingin membahas arsitektur dan JRPG, silakan kirim pesan.</p>
+    <div class="links"><a class="lk" href="#">Email</a><a class="lk" href="#">GitHub</a><a class="lk" href="#">LinkedIn</a></div>
+  </section>
+</main>
+
+<div class="hint" id="hint"><kbd>←</kbd> <kbd>→</kbd> halangan &nbsp; <kbd>↑</kbd> <kbd>↓</kbd> archetype &nbsp; <kbd>Enter</kbd> buka &nbsp; <kbd>Esc</kbd> kembali</div>
+
+<div class="screen" id="s-title">
+  <svg class="wash" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g filter="url(#rough)">
+      <path fill="#2E7C8E" opacity=".45" d="M90 120h420v300H90z"/>
+      <path fill="#8C2B24" opacity=".4" d="M520 220h380v260H520z"/>
+      <path fill="#C8973F" opacity=".2" d="M240 380h520v150H240z"/>
+    </g>
+  </svg>
+
+  <svg class="wordmark" viewBox="0 0 1000 320" role="img" aria-label="Derry Meiraldy">
+    <defs>
+      <mask id="mNotTri">
+        <rect width="1000" height="320" fill="#fff"/>
+        <polygon points="40,52 960,52 500,258" fill="#000"/>
+      </mask>
+      <mask id="mNotTxt">
+        <rect width="1000" height="320" fill="#fff"/>
+        <text class="wm" x="500" y="196" text-anchor="middle" textLength="900"
+          lengthAdjust="spacingAndGlyphs" fill="#000">MEIRALDY</text>
+      </mask>
+    </defs>
+    <g fill="#E3D9C6">
+      <text class="wm" x="500" y="196" text-anchor="middle" textLength="900"
+        lengthAdjust="spacingAndGlyphs" mask="url(#mNotTri)">MEIRALDY</text>
+      <polygon points="40,52 960,52 500,258" mask="url(#mNotTxt)"/>
+    </g>
+    <text class="wm-sub" x="500" y="232" text-anchor="middle">DERRY</text>
+    <rect x="40" y="286" width="920" height="3" fill="#E3D9C6" opacity=".8"/>
+  </svg>
+  <p class="cue eyebrow">Tekan tombol apa saja</p>
+</div>
+
+<div class="screen" id="s-battle">
+  <div class="b-scene">
+    <svg class="b-splat" viewBox="0 0 600 460" aria-hidden="true">
+      <path fill="#8C2B24" opacity=".55" d="M92 214c-38-46 6-118 68-132 74-17 132 22 150 74 15 44-14 96-72 108-70 15-116-10-146-50z"/>
+      <path fill="#2E7C8E" opacity=".5" d="M232 96c44-34 118-14 140 38 20 47-8 96-58 110-52 15-112-14-122-64-8-38 8-62 40-84z"/>
+      <path fill="#C8973F" opacity=".38" d="M126 300c40-30 108-16 128 26 18 38-6 82-52 92-48 10-100-16-104-58-2-26 8-46 28-60z"/>
+      <path fill="#8C2B24" opacity=".45" d="M296 268c30-8 62 14 60 44-2 30-34 50-62 40-26-10-34-42-14-64 5-6 10-16 16-20z"/>
+    </svg>
+
+    <div class="b-mark">
+      <p class="lbl">Medan</p>
+      <h2 id="bTitle"></h2>
+    </div>
+
+    <div class="b-fan" id="bCmd"></div>
+    <div class="b-threats" id="bField"></div>
+    <div class="b-party" id="bParty"></div>
+  </div>
+
+  <div class="b-hints">
+    <span><kbd>←</kbd> <kbd>→</kbd> halangan</span>
+    <span><kbd>↑</kbd> <kbd>↓</kbd> archetype</span>
+    <span><kbd>Enter</kbd> buka</span>
+    <button id="bExit"><kbd>Esc</kbd> kembali ke menu</button>
+  </div>
+</div>
+
+<div class="screen" id="s-threat"><div id="threatBody" style="width:100%"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============ data ============ */
+const ARCH = [
+  {
+    id:"mobile", name:"Mobile development", short:"Mobile", field:"Aplikasi iOS dan Flutter",
+    party:[["Swift, SwiftUI",82],["Flutter, Dart",76],["SwiftData",68]],
+    threats:[
+      {name:"Tanpa Internet", lv:"LV 32", line:"Semua fitur harus tetap jalan offline",
+       weak:"Penyimpanan lokal sebagai sumber kebenaran",
+       body:["Aplikasi keuangan dipakai justru saat sinyal buruk: di kasir, di parkiran, di warung. Kalau data hidup di server, aplikasinya mati bersama koneksinya.","Di Patungan saya jadikan penyimpanan lokal sebagai satu-satunya sumber kebenaran, bukan cache. SwiftData memegang seluruh keadaan, dan tidak ada satu pun jalur yang menunggu jaringan sebelum menampilkan sesuatu. Sinkronisasi kalau ada, jadi lapisan tambahan di atasnya, bukan syarat."],
+       proof:"Patungan", proofTag:"iOS", proofNote:"Empat mesin Swift murni tanpa dependensi pihak ketiga. Pembagian sisa terbesar dan penyederhanaan utang berjalan sepenuhnya di perangkat."},
+      {name:"Struk yang Buram", lv:"LV 41", line:"OCR di dunia nyata tidak pernah bersih",
+       weak:"Pipeline bertahap dengan skor keyakinan",
+       body:["Struk asli terlipat, buram, dan dicetak dengan tinta yang hampir habis. Model pengenalan teks yang bagus di data uji akan gagal di kondisi ini.","Solusinya bukan model yang lebih besar, tapi pipeline yang mengakui ketidakpastian. Praproses citra, ekstraksi teks, lalu penguraian dengan aturan yang memberi skor keyakinan per baris. Baris yang skornya rendah dilempar ke pengguna untuk dikoreksi, bukan disimpan diam-diam sebagai data salah."],
+       proof:"DomPet", proofTag:"Flutter", proofNote:"Akurasi 83,33% dari 30 struk nyata, skor uji penerimaan 88,22%, 85 unit test."},
+      {name:"Baterai dan Memori", lv:"LV 47", line:"Pemrosesan bahasa tanpa menyentuh server",
+       weak:"Ukur dulu, baru minta model bahasa bicara",
+       body:["Menjalankan model bahasa di ponsel itu mahal. Kalau setiap penilaian memanggil model, baterai habis dan hasilnya tidak konsisten antar percobaan.","Di Lantang saya pisah jadi tiga lapis. Lapis pertama mengukur secara deterministik: kerapatan kata pengisi, taksonomi jeda, kecepatan bicara dalam suku kata per detik. Lapis kedua memilih temuan mana yang layak disampaikan, dengan rumus, bukan model. Model bahasa baru masuk di lapis ketiga, hanya untuk merangkai kalimat. Angkanya selalu sama untuk rekaman yang sama."],
+       proof:"Lantang", proofTag:"iOS", proofNote:"Foundation Models di perangkat, LantangCore sebagai Swift Package headless dengan 11 unit test."}
+    ]
+  },
+  {
+    id:"web", name:"Website development", short:"Website", field:"Antarmuka statis dan 3D",
+    party:[["TypeScript",85],["Next.js, React",84],["Three.js, GLSL",61]],
+    threats:[
+      {name:"Muat Pertama", lv:"LV 28", line:"Berat di balik layar, instan di depan mata",
+       weak:"Static generation dan anggaran dependensi",
+       body:["Halaman yang butuh tiga detik untuk muncul sudah kalah sebelum dibaca. Dan penyebab tersering bukan gambar, tapi JavaScript yang dikirim untuk hal yang sebenarnya statis.","Pendekatan saya: hasilkan HTML saat build, kirim JavaScript hanya untuk bagian yang benar-benar interaktif, dan perlakukan setiap dependensi sebagai utang yang harus dibenarkan. Portfolio saya berjalan tanpa satu pun pustaka animasi karena CSS sudah cukup."],
+       proof:"derrymeiraldy.vercel.app", proofTag:"Web", proofNote:"Next.js App Router, TypeScript ketat, Tailwind v4, static generation di Vercel."},
+      {name:"Halaman yang Mati", lv:"LV 44", line:"Rapi, benar, dan sama sekali tak berkesan",
+       weak:"Satu momen berani, sisanya diam",
+       body:["Banyak portfolio benar secara teknis tapi tidak meninggalkan apa pun di kepala orang. Masalahnya bukan kurang efek, justru sering kelebihan: setiap bagian punya animasi masuk, dan tidak ada yang menonjol.","Di NULLFEED saya belanjakan seluruh keberanian di satu tempat. Satu objek, satu uniform bernama corruption yang menggerakkan distorsi, dan seluruh halaman diam di sekelilingnya. Yang membuatnya bekerja bukan jumlah efeknya, tapi keputusan tentang apa yang tidak dianimasikan."],
+       proof:"NULLFEED", proofTag:"Web", proofNote:"SvelteKit dengan Svelte 5 runes, Threlte, shader GLSL sendiri, GSAP ScrollTrigger, post-processing."},
+      {name:"Tumpukan Dependensi", lv:"LV 35", line:"Setiap paket adalah utang yang jatuh tempo",
+       weak:"Menolak sebelum menambah",
+       body:["Proyek web mudah membengkak. Satu pustaka tanggal, satu pustaka ikon, satu pustaka animasi, dan tiba-tiba pembaruan keamanan jadi pekerjaan mingguan.","Aturan saya sederhana: sebuah paket masuk hanya kalau menulisnya sendiri akan memakan lebih dari sehari atau berisiko salah secara halus. Format tanggal tidak lolos. Shader post-processing lolos."],
+       proof:"Situs Uneed Developer", proofTag:"Web", proofNote:"Next.js 15, React 19, Tailwind v4, Prisma dengan PostgreSQL, NextAuth.js."}
+    ]
+  },
+  {
+    id:"software", name:"Software development", short:"Software", field:"Logika inti dan model data",
+    party:[["Arsitektur modul",80],["Pengujian",78],["Prisma, PostgreSQL",70]],
+    threats:[
+      {name:"Bug yang Tak Terlihat", lv:"LV 50", line:"Logika yang tidak pernah diuji sendirian",
+       weak:"Modul murni tanpa import framework",
+       body:["Logika yang menempel pada widget hanya bisa diuji dengan menjalankan aplikasinya. Artinya jarang diuji, dan kesalahan baru ketahuan di tangan pengguna.","Saya balik urutannya. Bagian yang bisa salah, seperti pembagian uang, penjadwalan giliran, atau penilaian ucapan, saya letakkan di modul yang tidak mengimpor satu pun framework antarmuka. Modul itu diuji tanpa membuka simulator. Antarmuka datang belakangan sebagai pembaca."],
+       proof:"Pola inti di semua proyek", proofTag:"Arsitektur", proofNote:"SplitEngine, StepOutCore, LantangCore, dan core/ di Emberfall memakai bentuk yang sama."},
+      {name:"Data yang Kusut", lv:"LV 38", line:"Relasi yang tumbuh tanpa rencana",
+       weak:"Skema dulu, fitur belakangan",
+       body:["Skema yang dibiarkan tumbuh mengikuti fitur akan berakhir dengan kolom yang artinya bergantung pada kolom lain, dan kueri yang tidak ada yang berani sentuh.","Saya mulai dari model data, bukan dari halaman. Untuk situs studio, entitas dan relasinya saya kunci di skema Prisma sebelum satu komponen pun ditulis. Migrasi jadi catatan sejarah yang bisa dibaca, bukan tumpukan tambalan."],
+       proof:"Sistem manajemen laundry", proofTag:"Backend", proofNote:"Laravel 11 dengan SQLite, metode Waterfall, pengujian Black Box, terdokumentasi penuh."},
+      {name:"Aturan yang Berubah", lv:"LV 36", line:"Kebutuhan bergeser di tengah pengerjaan",
+       weak:"Batas modul yang jelas",
+       body:["Perubahan kebutuhan tidak bisa dicegah. Yang bisa diatur adalah seberapa jauh perubahan itu merambat.","Kalau aturan bisnis hidup di satu modul murni, mengubahnya berarti mengubah satu berkas dan menjalankan ulang pengujiannya. Kalau aturan itu tersebar di tujuh komponen antarmuka, mengubahnya berarti berburu."],
+       proof:"Jurnal Random Forest dan SVM", proofTag:"Penelitian", proofNote:"Eksperimen scikit-learn nyata pada Pima Indians Diabetes Dataset, terbit format JUKTISI dengan 17 referensi IEEE."}
+    ]
+  },
+  {
+    id:"game", name:"Game development", short:"Game", field:"Peminat dengan sistem yang sudah jalan",
+    party:[["Desain sistem",74],["Godot, GDScript",66],["SpriteKit",63]],
+    threats:[
+      {name:"Keseimbangan", lv:"LV 46", line:"Angka yang terasa benar tapi tak terbukti",
+       weak:"Simulasi ribuan run, bukan firasat",
+       body:["Menyeimbangkan permainan dengan cara memainkannya sendiri berarti mempercayai perasaan setelah dua puluh kali coba. Itu tidak cukup untuk menemukan jalur build yang terlalu kuat.","Di StepOut saya bangun harness yang menjalankan 2.000 run tersimulasi tanpa membuka jendela permainan. Hasilnya bukan cuma angka menang-kalah, tapi temuan struktural: jalur mana yang runtuh di ronde berapa, dan upgrade mana yang tidak pernah dipilih. Semuanya saya catat di BALANCING.md."],
+       proof:"StepOut", proofTag:"iOS", proofNote:"15 upgrade dalam empat jalur build: Venom, Riposte, Brink, dan Tempo."},
+      {name:"Acak yang Tak Terulang", lv:"LV 39", line:"Bug yang menghilang saat dicari",
+       weak:"RNG berbenih yang dapat direproduksi",
+       body:["Kalau keacakan diambil dari sumber sistem, satu run tidak bisa diputar ulang. Laporan bug jadi tidak berguna dan pengujian otomatis jadi mustahil.","Saya pakai SplitMix64 dengan benih eksplisit yang jadi bagian dari keadaan permainan. Benih yang sama menghasilkan run yang sama persis, sehingga harness penyeimbang bisa berjalan deterministik dan setiap kesalahan bisa diulang."],
+       proof:"StepOutCore", proofTag:"Swift Package", proofNote:"Nol import SpriteKit. Kontrak resolve(state, action) mengembalikan keadaan baru dan aliran peristiwa."},
+      {name:"Giliran yang Kacau", lv:"LV 42", line:"Urutan aksi yang tidak bisa diprediksi",
+       weak:"Tick accumulator, bukan antrean ad hoc",
+       body:["Sistem giliran yang dibangun dari timer dan panggilan balik akan menghasilkan urutan berbeda pada perangkat berbeda. Untuk permainan taktis, itu fatal.","Penjadwalnya saya buat sebagai akumulator tick: setiap entitas mengumpulkan nilai berdasarkan kecepatannya, dan yang melewati ambang lebih dulu mendapat giliran. Murni aritmetika bilangan bulat, tanpa waktu nyata, jadi hasilnya identik di mana pun."],
+       proof:"Emberfall", proofTag:"Godot", proofNote:"Mekanik Break dan Boost dengan sistem Turn Weaving, logika pertarungan murni di core/."}
+    ]
+  }
+];
+
+/* ============ sigil ============ */
+function ring(cx,cy,r,n,rot){
+  let p=[];
+  for(let k=0;k<n;k++){const a=rot+k*2*Math.PI/n;p.push((cx+r*Math.cos(a)).toFixed(1)+","+(cy+r*Math.sin(a)).toFixed(1));}
+  return p.join(" ");
+}
+function sigil(a,t){
+  const s = a*3+t;
+  const n = 3+(s%4), m = 3+((s+2)%5);
+  return `<svg class="sig" viewBox="0 0 120 120" aria-hidden="true">
+    <circle cx="60" cy="60" r="47"/>
+    <polygon points="${ring(60,60,43,n,-Math.PI/2)}"/>
+    <polygon points="${ring(60,60,27,m,Math.PI/2+s)}"/>
+    <line x1="60" y1="4" x2="60" y2="20"/><line x1="60" y1="100" x2="60" y2="116"/>
+    <polygon class="solid" points="${ring(60,60,8,4,0)}"/>
+  </svg>`;
+}
+
+/* ============ state machine (murni) ============ */
+const NAV = {
+  title:   {enter:"hub"},
+  hub:     {start:"battle", warp:"section"},
+  battle:  {confirm:"threat", cancel:"hub"},
+  threat:  {cancel:"battle"},
+  section: {cancel:"hub", warp:"section"}
+};
+const transition = (s,e) => (NAV[s] && NAV[s][e]) || s;
+
+/* ============ runtime ============ */
+let state="title", menuIdx=0, archIdx=0, threatIdx=0;
+const $ = s => document.querySelector(s);
+const railBtns = [...document.querySelectorAll(".rail-item")];
+const menuBtns = [...document.querySelectorAll(".menu-item")];
+
+const showScreen = id => document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id===id));
+const lock = on => document.body.classList.toggle("locked", on);
+
+async function wipe(fn){
+  const w = $("#wipe");
+  w.className="in";
+  await new Promise(r => setTimeout(r,230));
+  fn();
+  w.className="out";
+  setTimeout(()=>{w.className="";},220);
+}
+
+function render(){
+  $("#rail").classList.toggle("on", state!=="title");
+  $("#hint").classList.toggle("on", state==="battle");
+  if(state==="title"){ showScreen("s-title"); lock(true); }
+  else if(state==="battle"){ showScreen("s-battle"); lock(true); }
+  else if(state==="threat"){ showScreen("s-threat"); lock(true); }
+  else { showScreen(""); lock(false); }
+  menuBtns.forEach((b,i)=>b.classList.toggle("sel", state==="hub" && i===menuIdx));
+}
+
+function go(event, payload){
+  if(event==="warp"){
+    wipe(()=>{ state="section"; document.getElementById(payload).scrollIntoView(); markRail(payload); render(); });
+    return;
+  }
+  const next = transition(state,event);
+  if(next===state) return;
+  wipe(()=>{
+    state = next;
+    if(next==="hub"){ window.scrollTo(0,0); markRail(null); }
+    if(next==="battle") drawBattle(true);
+    if(next==="threat") drawThreat();
+    render();
+    if(next==="threat") $("#s-threat").scrollTop = 0;
+  });
+}
+
+const markRail = id => railBtns.forEach(b => b.setAttribute("aria-current", String(b.dataset.warp===id)));
+
+const SPOTS = [
+  {top:"16%", right:"7%",  scale:1},
+  {top:"41%", right:"34%", scale:.86},
+  {top:"63%", right:"9%",  scale:.95}
+];
+
+function drawCmd(){
+  $("#bCmd").innerHTML = ARCH.map((a,i)=>`
+    <button class="fan" data-a="${i}" aria-pressed="${i===archIdx}">
+      <span class="key">${i+1}</span>
+      <span><span class="big">${a.short}</span><span class="sm">${a.field}</span></span>
+    </button>`).join("");
+  $("#bCmd").querySelectorAll(".fan").forEach(b=>{
+    b.addEventListener("click", ()=>{ if(+b.dataset.a!==archIdx){ archIdx=+b.dataset.a; threatIdx=0; drawBattle(true);} });
+  });
+}
+
+function drawParty(){
+  $("#bParty").innerHTML = ARCH[archIdx].party.map(([k,v])=>
+    `<div class="party-row"><span>${k}</span><span class="lv">${v}</span></div>`).join("");
+}
+
+function drawBattle(animate){
+  const a = ARCH[archIdx];
+  $("#bTitle").textContent = a.name;
+  $("#bField").innerHTML = a.threats.map((t,i)=>{
+    const s = SPOTS[i] || SPOTS[0];
+    return `<button class="threat ${animate?"b-enter":""} ${i===threatIdx?"sel":""}" data-t="${i}"
+      style="top:${s.top};right:${s.right};transform:scale(${s.scale})">
+      <span class="halo">${sigil(archIdx,i)}</span>
+      <span class="tie"></span>
+      <span class="plate"><span class="nm">${t.name}</span><span class="lv">${t.lv}</span></span>
+    </button>`;
+  }).join("");
+  $("#bField").querySelectorAll(".threat").forEach(b=>{
+    b.addEventListener("click", ()=>{ threatIdx=+b.dataset.t; go("confirm"); });
+  });
+  drawCmd();
+  drawParty();
+}
+
+function syncThreatSel(){
+  document.querySelectorAll(".threat").forEach((b,i)=>b.classList.toggle("sel", i===threatIdx));
+}
+
+function drawThreat(){
+  const a = ARCH[archIdx], t = a.threats[threatIdx];
+  $("#threatBody").innerHTML = `
+    <div class="t-band">
+      <p class="eyebrow">${a.name} &nbsp;·&nbsp; ${t.lv}</p>
+      <h2 class="serif">${t.name}</h2>
+      <div class="t-weak"><b>Lemah terhadap</b><span>${t.weak}</span></div>
+    </div>
+    <div class="t-body">
+      <div class="prose">${t.body.map(p=>`<p>${p}</p>`).join("")}</div>
+      <div class="t-proof">
+        <span class="tag" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre)">Bukti · ${t.proofTag}</span>
+        <h4>${t.proof}</h4>
+        <p>${t.proofNote}</p>
+      </div>
+    </div>
+    <div class="t-nav">
+      <button class="lk" id="tBack">Kembali</button>
+      <button class="lk" id="tNext">Halangan berikutnya</button>
+      <button class="lk" id="tProj">Lihat semua project</button>
+    </div>`;
+  $("#tBack").addEventListener("click", ()=>go("cancel"));
+  $("#tNext").addEventListener("click", ()=>{
+    threatIdx = (threatIdx+1) % a.threats.length;
+    wipe(()=>{ drawThreat(); $("#s-threat").scrollTop = 0; });
+  });
+  $("#tProj").addEventListener("click", ()=>{ state="hub"; go("warp","project"); });
+}
+
+/* input */
+document.addEventListener("keydown", e=>{
+  if(state==="title"){ e.preventDefault(); go("enter"); return; }
+  if(e.key==="Escape"){ e.preventDefault(); go("cancel"); return; }
+  if(state==="hub"){
+    if(e.key==="ArrowDown"){ e.preventDefault(); menuIdx=(menuIdx+1)%menuBtns.length; render(); }
+    if(e.key==="ArrowUp"){ e.preventDefault(); menuIdx=(menuIdx-1+menuBtns.length)%menuBtns.length; render(); }
+    if(e.key==="Enter"){ e.preventDefault(); menuBtns[menuIdx].click(); }
+  }
+  if(state==="battle"){
+    const n = ARCH[archIdx].threats.length;
+    if(e.key==="ArrowRight"){ e.preventDefault(); threatIdx=(threatIdx+1)%n; syncThreatSel(); }
+    if(e.key==="ArrowLeft"){ e.preventDefault(); threatIdx=(threatIdx-1+n)%n; syncThreatSel(); }
+    if(e.key==="ArrowDown"){ e.preventDefault(); archIdx=(archIdx+1)%ARCH.length; threatIdx=0; drawBattle(true); }
+    if(e.key==="ArrowUp"){ e.preventDefault(); archIdx=(archIdx-1+ARCH.length)%ARCH.length; threatIdx=0; drawBattle(true); }
+    if(e.key==="Enter"){ e.preventDefault(); go("confirm"); }
+    if("1234".includes(e.key)){ const i=+e.key-1; if(i!==archIdx){ archIdx=i; threatIdx=0; drawBattle(true);} }
+  }
+});
+document.getElementById("bExit").addEventListener("click", ()=>go("cancel"));
+$("#s-title").addEventListener("click", ()=>go("enter"));
+
+[...menuBtns, ...railBtns].forEach(b=>{
+  b.addEventListener("click", ()=>{
+    const t = b.dataset.warp;
+    if(t==="start"){ if(state!=="hub") state="hub"; go("start"); }
+    else go("warp", t);
+  });
+});
+
+addEventListener("scroll", ()=>{
+  if(state!=="section" && state!=="hub") return;
+  const ids=["project","skill","about","contact"];
+  let active=null;
+  for(const id of ids){
+    if(document.getElementById(id).getBoundingClientRect().top < innerHeight*0.45) active=id;
+  }
+  markRail(active);
+  if(active && state==="hub") state="section";
+  if(!active && state==="section"){ state="hub"; render(); }
+},{passive:true});
+
+/* three.js focal object */
+(function(){
+  if(typeof THREE==="undefined") return;
+  const renderer = new THREE.WebGLRenderer({canvas:document.getElementById("focal"),alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(42,1,.1,100);
+  cam.position.z = 6.2;
+  const geo = new THREE.IcosahedronGeometry(2.1,1);
+  const wire = new THREE.LineSegments(new THREE.WireframeGeometry(geo),
+    new THREE.LineBasicMaterial({color:0xC8973F,transparent:true,opacity:.3}));
+  const solid = new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x0C0F22}));
+  const grp = new THREE.Group(); grp.add(solid); grp.add(wire); scene.add(grp);
+  function resize(){
+    renderer.setSize(innerWidth,innerHeight,false);
+    cam.aspect = innerWidth/innerHeight;
+    grp.position.x = innerWidth<760 ? 0 : 2.3;
+    cam.updateProjectionMatrix();
+  }
+  addEventListener("resize",resize); resize();
+  const slow = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let t=0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    t += slow ? .0006 : .0032;
+    grp.rotation.y = t;
+    grp.rotation.x = Math.sin(t*.6)*.22;
+    const target = state==="title" ? .5 : (state==="hub" ? .28 : .05);
+    wire.material.opacity += (target - wire.material.opacity)*.05;
+    renderer.render(scene,cam);
+  })();
+})();
+
+drawBattle(false);
+render();
+</script>
