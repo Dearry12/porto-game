@@ -1,12 +1,10 @@
 import { ABOUT } from '@/content/about';
+import { SectionHead } from '../shell/SectionHead';
 
 export function Contact() {
   return (
     <section id="contact">
-      <div className="sec-head">
-        <span className="diamond">◆</span>
-        <h2>Contact</h2>
-      </div>
+      <SectionHead id="contact" title="Contact" />
       <p className="sec-lede">
         Kalau ada yang ingin dibangun, atau sekadar ingin membahas arsitektur dan JRPG, silakan kirim pesan.
       </p>

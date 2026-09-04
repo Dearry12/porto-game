@@ -1,12 +1,10 @@
 import { SKILLS } from '@/content/skills';
+import { SectionHead } from '../shell/SectionHead';
 
 export function Skills() {
   return (
     <section id="skill">
-      <div className="sec-head">
-        <span className="diamond">◆</span>
-        <h2>Skill</h2>
-      </div>
+      <SectionHead id="skill" title="Skill" />
       <p className="sec-lede">
         Tanpa persentase. Tiap baris membawa buktinya sendiri.
       </p>

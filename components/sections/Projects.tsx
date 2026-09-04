@@ -1,4 +1,5 @@
 import { PROJECTS } from '@/content/projects';
+import { SectionHead } from '../shell/SectionHead';
 
 /**
  * Server component: this markup is real HTML at build time, present in
@@ -9,10 +10,7 @@ import { PROJECTS } from '@/content/projects';
 export function Projects() {
   return (
     <section id="project">
-      <div className="sec-head">
-        <span className="diamond">◆</span>
-        <h2>Project</h2>
-      </div>
+      <SectionHead id="project" title="Project" />
       <p className="sec-lede">
         Delapan proyek yang saya kerjakan sampai selesai. Sebagian besar punya modul logika yang berdiri sendiri
         tanpa framework antarmuka.

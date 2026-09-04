@@ -227,8 +227,8 @@ section:nth-of-type(even) {
 
 .sec-head {
   display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 0.7rem;
   margin-bottom: 0.8rem;
 }
 
@@ -236,10 +236,18 @@ section:nth-of-type(even) {
   font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(2.5rem, 3vw, 2.6rem);
+  margin-left: 0.2rem;
 }
 
-.diamond {
-  color: var(--ochre);
+/* The "0N/04" real-value index next to each section heading —
+   CLAUDE.md section 3b's drafting-mark rule: real values, not gibberish. */
+.sec-index {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--parch-dim);
+  border-left: 1px solid var(--rule);
+  padding-left: 0.6rem;
 }
 
 .sec-lede {

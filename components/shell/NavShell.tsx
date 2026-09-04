@@ -6,6 +6,7 @@ import { initHistory, useNavStore } from '@/lib/nav/store';
 import { SECTION_ORDER } from '@/lib/nav/machine';
 import { Rail } from './Rail';
 import { InkField } from './InkField';
+import { Wipe } from './Wipe';
 import { TitleScreen } from '../title/TitleScreen';
 import { Cascade } from '../hub/Cascade';
 import { HubMeta } from '../hub/HubMeta';
@@ -114,6 +115,7 @@ export function NavShell({ children }: { children: ReactNode }) {
       <BattleScreen />
       <ThreatDetail />
       {children}
+      <Wipe />
     </>
   );
 }

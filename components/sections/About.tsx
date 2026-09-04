@@ -1,14 +1,12 @@
 import { ABOUT } from '@/content/about';
+import { SectionHead } from '../shell/SectionHead';
 
 export function About() {
   const { identity, prose, facts, education, experience, academicOther, awards, interests } = ABOUT;
 
   return (
     <section id="about">
-      <div className="sec-head">
-        <span className="diamond">◆</span>
-        <h2>About</h2>
-      </div>
+      <SectionHead id="about" title="About" />
       <p className="sec-lede">
         {identity.role} — {identity.location}
       </p>
