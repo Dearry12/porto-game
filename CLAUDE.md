@@ -317,7 +317,9 @@ Kerjakan berurutan. **Jangan melompat.** Lapor di akhir setiap fase dan berhenti
 
 **Fase 3 mendahului fase 4 itu penting.** Kalau situs belum bisa dinavigasi dan dibaca sebelum ada animasi, animasi itu sedang menutupi fondasi yang rusak.
 
-**Fase saat ini: 5.** Fase 4 selesai untuk kriteria "selesai bila"-nya sendiri: title dan hub sudah terbaca sebagai arah §3b (tipografi, XOR wordmark, ink twist, garis ukur, grain), plus wipe GSAP dan drafting-mark index nyata di keempat section sebagai bonus yang juga menyelesaikan sebagian Fase 3. Battle dan threat masih placeholder jujur — command fan, threat field, sigil, party panel, animasi ganti archetype, drafting marks battle (targeting line, name plate skew) semuanya menunggu di sini. Konflik LinkedIn sudah terselesaikan (lihat blok Data Kontak).
+**Fase saat ini: 6.** Fase 5 selesai untuk kriteria "selesai bila"-nya sendiri: dua belas halangan terjangkau lewat keyboard dan pointer, masing-masing dengan panel bukti. Command fan, threat field, sigil prosedural, party panel, animasi stagger ganti archetype, targeting line, name-plate skew, dan halaman threat detail penuh (band diagonal, plate "Weak against", body, panel bukti dengan tautan repo/live, navigasi next-obstacle dan view-all-projects) semuanya jalan — diverifikasi lewat DOM langsung, bukan cuma dibaca dari kode. Bahasa situs sudah beralih total ke Inggris (lihat blok Copy Antarmuka). Konflik LinkedIn sudah terselesaikan (lihat blok Data Kontak).
+
+Belum ada di battle: pengecekan gamepad (Fase 7), audio (Fase 7). `lib/motion/wipe.ts` dan pola kill+cleanup GSAP di `ThreatField.tsx` adalah referensi baik untuk animasi berikutnya — React Strict Mode di dev meng-invoke effect dua kali di setiap mount, jadi tween GSAP dalam `useEffect` wajib punya `gsap.killTweensOf()` di awal dan `tween.kill()` di cleanup, atau animasi bisa macet di tengah jalan.
 
 ---
 
