@@ -321,7 +321,7 @@ Kerjakan berurutan. **Jangan melompat.** Lapor di akhir setiap fase dan berhenti
 
 **Fase 3 mendahului fase 4 itu penting.** Kalau situs belum bisa dinavigasi dan dibaca sebelum ada animasi, animasi itu sedang menutupi fondasi yang rusak.
 
-**Fase saat ini: 3.** Fase 2 selesai; lihat `content/` untuk data final. Konflik LinkedIn di blok Data Kontak di atas belum terselesaikan — konfirmasi sebelum Contact section dirender.
+**Fase saat ini: 4.** Fase 3 selesai — shell statis navigable (hub, section, rail, keyboard, history) sudah jalan, terverifikasi langsung di dev server, bukan cuma `tsc`. Battle dan threat masih placeholder jujur (Fase 5). Konflik LinkedIn di blok Data Kontak di atas **sudah live di Contact section** — belum terselesaikan, konfirmasi secepatnya.
 
 ---
 
