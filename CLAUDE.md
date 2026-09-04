@@ -172,7 +172,7 @@ Enam keputusan terbuka di MASTER_PROMPT §12 sudah diputuskan. Jangan buka lagi 
 
 | # | Keputusan | Alasan |
 |---|---|---|
-| a | GitHub `github.com/Dearry12`. **Email dan LinkedIn masih `TODO`** | Jangan pernah mengarang alamat email atau URL profil. Tanya. |
+| a | Data kontak lengkap, lihat blok **Data Kontak** di bawah | Tidak ada lagi `TODO` kontak. Tetap berlaku: jangan pernah mengarang alamat, URL, atau angka metrik yang belum diberikan. |
 | b | **Angka LV pada halangan: dipertahankan** | Tidak ada yang membaca "LV 41" sebagai klaim faktual. Justru itu yang memisahkan lapisan game dari lapisan informasi. |
 | c | **Persentase skill: dibuang** | "Swift 82" terlihat seperti pengukuran dan tidak punya jawaban untuk "berdasarkan apa?". Section Skill memakai label berbasis bukti: `Swift, SwiftUI — tiga aplikasi, 96 unit test`. |
 | c2 | **Party panel battle memakai jumlah proyek**, format `Swift · 3` | HUD tetap butuh angka supaya terbaca seperti HUD. Angkanya fakta yang bisa dihitung, bukan penilaian diri. |
@@ -206,6 +206,18 @@ Seluruh copy di MASTER_PROMPT §8 dan `docs/prototype.html` bersifat **final dan
 - Setiap halangan punya **tepat 2 paragraf** `body`.
 - Setiap archetype punya **tepat 3 halangan**. Empat archetype, tidak lebih.
 - Data yang belum ada → tulis `TODO` dan **laporkan**. Jangan karang email, URL, angka metrik, atau nama proyek.
+
+### Data Kontak (kanonik)
+
+Angkat verbatim ke `content/about.ts`. Ini satu-satunya sumber kebenaran untuk section Contact.
+
+```
+GitHub    https://github.com/Dearry12
+Email     derry.reisen@gmail.com
+LinkedIn  https://www.linkedin.com/in/derry-meiraldy-137b77372/
+```
+
+Tautan email memakai `mailto:`. Tautan eksternal memakai `rel="noopener noreferrer"`.
 
 ---
 

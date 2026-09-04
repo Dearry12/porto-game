@@ -46,3 +46,7 @@ Working rules for contributors and coding agents are in [CLAUDE.md](CLAUDE.md).
 ## Status
 
 Phase 1 — navigation core.
+
+## Contact
+
+[GitHub](https://github.com/Dearry12) · [derry.reisen@gmail.com](mailto:derry.reisen@gmail.com) · [LinkedIn](https://www.linkedin.com/in/derry-meiraldy-137b77372/)
