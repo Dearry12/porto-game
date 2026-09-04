@@ -1,7 +1,8 @@
 # CLAUDE.md
 
 Instruksi untuk Claude Code saat bekerja di repositori ini.
-Baca `docs/MASTER_PROMPT.md` untuk konteks proyek dan `docs/prototype.html` untuk teknik yang sudah terpecahkan.
+Baca `docs/MASTER_PROMPT.md` untuk konteks proyek, `docs/prototype.html` untuk teknik yang sudah terpecahkan,
+`docs/CONTENT.md` untuk copy dan angka final, dan `docs/DESIGN_TWIST.md` untuk arah visual (§3b di bawah).
 File ini berisi **aturan kerja**, bukan dokumentasi.
 
 ---
@@ -166,6 +167,68 @@ Semuanya sudah ada di `docs/prototype.html`.
 
 ---
 
+## Twist Desain (§3b — menimpa §3 di mana bertentangan)
+
+Sumber lengkap: `docs/DESIGN_TWIST.md`. Bacaan wajib sebelum menyentuh Fase 4.
+
+**Masalah yang diperbaiki:** prototipe saat ini terbaca sebagai Metaphor dengan warna berbeda. Itu bukti konsep yang bagus, tapi portfolio yang salah — orang yang mengenali sumbernya melihat proyek fan-made, yang tidak mengenalinya melihat sesuatu tanpa cerita asal. **Perbaikannya bukan melemahkan desainnya, tapi mempertahankan tata bahasanya dan mengganti kosakatanya.**
+
+**Tata bahasa yang dipertahankan** (ini yang membuat referensinya bekerja): tipografi raksasa sebagai elemen komposisi utama, satu diagonal konsisten di setiap potongan, bidang warna di belakang tipografi bukan di sampingnya, layout asimetris dengan satu sisi berat dan satu sisi tenang, gerak tajam-pendek dengan entri staggered, plate informasi yang diikat ke subjeknya lewat garis tipis.
+
+**Kosakata yang harus diganti** (ini yang membuatnya terbaca sebagai *Metaphor*): sapuan cat minyak, magenta/cyan saturasi penuh, potret anime di separuh kanan, ornamen manuskrip berhias, teks subtitle Jepang di slot label kecil.
+
+### Twist-nya: dari lukisan ke percetakan
+
+Permukaan cat diganti **cetak dua-tinta yang meleset registrasinya (misregistered print)**, dan ornamen manuskrip diganti **tanda gambar teknik (drafting marks)**. Alasannya: referensinya adalah fantasi tentang dunia yang dilukis; situs ini tentang seseorang yang memisahkan logika murni dari presentasi dan mengujinya headless. Bahasa gambar-teknik-dan-cetak mengatakan itu tanpa sepatah kata pun copy, sambil tetap mempertahankan yang memang disukai pemilik — bidang warna berani di bawah tipografi raksasa. Hasilnya harus terbaca sebagai **lembaran teknis hasil sablon (screen-printed technical broadsheet)**, bukan menu JRPG.
+
+### Resep tekstur
+
+**Misregistrasi** — setiap bidang warna digambar dua kali dari path yang sama, digeser dan dirotasi sedikit, dalam dua tinta (`mix-blend-mode: multiply`, offset 3–6px; lebih besar terlihat seperti kesalahan, lebih kecil tidak terlihat). Overlap menggelap, fringe menampakkan secuil tiap tinta. Ini satu gerakan yang membuat permukaannya terbaca sebagai cetak, bukan cat.
+
+**Kerapatan tinta** — turbulence dipakai sebagai **opacity mask** (bukan displacement seperti tepi robek yang sudah ada) supaya tinta terlihat tipis di beberapa tempat, seperti sablon. Filter displacement lama tetap dipakai untuk tepi robek; ini dilapis di atasnya untuk variasi kerapatan.
+
+**Halftone** — pola titik SVG di area kecil, bukan fill rata. Pakai jarang — satu atau dua elemen per layar, jangan seluruh latar.
+
+**Tanda gambar teknik** — lapisan ornamen pengganti hiasan manuskrip, warna `--parch-dim`, 0.5px, opasitas ~0.35: **registration cross** (`+` dalam lingkaran, 14px, di dua/tiga sudut frame), **garis dimensi** (hairline dengan ujung tick + label monospace berisi angka nyata — lebar viewport, indeks section, jumlah halangan), **grid hairline** (8px, opasitas 0.05, hanya terlihat di atas bidang warna), **label koordinat** (monospace 9px di sudut panel besar, mis. `x:04 y:12`). **Wajib membawa nilai nyata, bukan omong kosong dekoratif** — kalau label bertulis `03/12`, itu karena memang ada dua belas halangan dan ini yang ketiga.
+
+### Tipografi
+
+Satu pergantian yang paling mengubah kesan: slot teks kecil di bawah tiap kata display, yang di referensi berisi bahasa Jepang, di sini berisi **label teknis monospace**. Setiap eyebrow, plate, hint, indeks, dan caption pakai JetBrains Mono, huruf besar, tracking lebar. Ini sendirian menggeser kesan dari "menu game" ke "dokumen rekayasa" tanpa menyentuh tipe display sama sekali.
+
+| Peran | Wajah | Perlakuan |
+|---|---|---|
+| Display | Bodoni Moda 900 | Kaskade, plate, judul section. Tidak pernah di bawah 40px. |
+| Struktural kecil | JetBrains Mono | Semua label, indeks, koordinat, hint, caption |
+| Body | Archivo Narrow | Prosa saja: body halangan, about, ringkasan project |
+
+Tiga wajah, tiga tugas, tanpa tumpang tindih. Kalau teksnya bukan prosa, itu monospace.
+
+**Outline:** jangan tiru outline tebal referensi pada tipe display. Sebagai gantinya, saat tipe display duduk di atas bidang warna, potong keluar dari bidang itu memakai teknik XOR mask yang sudah ada. Knockout, bukan outline — keterbacaan sama, tanda tangan berbeda.
+
+### Geometri: aturan garis ukur
+
+Kaskade menu diikat ke **garis ukur vertikal (measurement rule)** di tepi kiri: hairline dengan tick tiap 24px, tiap item menu sejajar ke tick utama berlabel monospace `01`–`05`, garis ini berlanjut ke section dengan tick section aktif terisi ochre. Ini menggantikan rail sebagai elemen dekoratif dengan sesuatu yang terbaca sebagai alat gambar, dan memberi kaskade alasan untuk stagger-nya alih-alih terlihat sembarangan.
+
+### Komposisi per layar (tambahan/override)
+
+- **Title.** Wordmark XOR triangle knockout tetap. Di belakangnya, dua bidang tinta misregistered, bukan cipratan cat. Registration cross di kiri-atas dan kanan-bawah frame. Baris monospace di bawah rule berisi versi build dan tahun. Objek 3D duduk **di belakang dan terpotong tepi frame** — ini slot komposisi yang di referensi ditempati potret karakter, jadi jangan taruh di tengah.
+- **Hub.** Kaskade diikat ke garis ukur. Satu bidang tinta misregistered besar di belakang tiga item tengah. Panel identitas kanan-bawah dibatasi garis dimensi, bukan bar skew. Halftone hanya di satu elemen.
+- **Battle.** Command fan tetap staggered fan, **bukan** busur radial trigonometris — label dengan panjang bervariasi merusak susunan radial, dan referensinya sendiri memakai stagger. Tambahan: **targeting line** (SVG `<line>` full-screen dari fan aktif ke pusat obstacle terpilih, rust 1px, lingkaran kecil di ujung obstacle, dihitung ulang via `getBoundingClientRect` saat seleksi berubah, disembunyikan di mobile); **name plate skew** (`clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%)`, fill rust); **timeline masuk/keluar** saat ganti archetype (obstacle lama `opacity:0, x:40` stagger 0.04s, tukar data, obstacle baru `opacity:1, x:0` dengan `expo.out`, stagger 0.06s). Party panel tetap tiga alat per archetype, **jumlah bukti bukan bar** — `Swift · 3` berarti tiga proyek terkirim, sudah sejalan dengan keputusan c2.
+
+### Ditolak dari proposal radial-menu
+
+Empat nama monster fiksi (Fragmentation Beast dkk.) — nama karangan mengklaim masalah yang belum dibuktikan pemilik; dua belas halangan nyata di §8 masing-masing punya angka atau artefak nyata. Satu halangan per disiplin — meruntuhkan dua belas bukti jadi empat kalimat. `mix-blend-mode: difference` pada teks — sering tak terbaca di atas bidang multi-warna. Bar HP penuh per alat — bar penuh tidak bicara apa-apa. Penempatan radial trigonometris — rusak oleh panjang label bervariasi. Glyph controller L/R/Y untuk tautan cepat — asing bagi yang belum main sumbernya. Magenta/cyan saturasi penuh — sudah ditolak di §3.
+
+### Uji kemiripan
+
+Sebelum mengirim layar apa pun: **jelaskan layarnya ke orang yang belum pernah lihat referensinya. Kalau deskripsinya hanya masuk akal dengan menyebut nama gamenya, paraphrase-nya gagal.**
+
+Deskripsi yang lolos: *lima kata serif raksasa turun menyusuri garis ukur, di atas dua bidang tinta yang meleset registrasinya, dengan indeks monospace dan tanda registrasi.* Deskripsi yang gagal: *seperti menu utama Metaphor tapi krem dan rust.*
+
+Tanda peringatan paraphrase mulai luntur: bidang warna digambar sebagai blob organik alih-alih geometri misregistered; teks kecil di-set serif/sans alih-alih monospace; label drafting membawa nilai dekoratif alih-alih nyata; tipe display mendapat outline tebal; ada sesuatu ditempatkan di slot yang seharusnya potret karakter.
+
+---
+
 ## Keputusan Terkunci
 
 Enam keputusan terbuka di MASTER_PROMPT §12 sudah diputuskan. Jangan buka lagi tanpa diminta.
@@ -214,10 +277,18 @@ Angkat verbatim ke `content/about.ts`. Ini satu-satunya sumber kebenaran untuk s
 ```
 GitHub    https://github.com/Dearry12
 Email     derry.reisen@gmail.com
-LinkedIn  https://www.linkedin.com/in/derry-meiraldy-137b77372/
+Telepon   +62 878-8794-9083
+LinkedIn  ⚠️ KONFLIK — lihat di bawah, jangan pilih sendiri
 ```
 
-Tautan email memakai `mailto:`. Tautan eksternal memakai `rel="noopener noreferrer"`.
+Tautan email memakai `mailto:`, telepon `tel:+6287887949083`. Tautan eksternal memakai `rel="noopener noreferrer"`.
+
+**Konflik LinkedIn, belum terselesaikan.** Dua sumber memberi slug berbeda:
+
+- Dikonfirmasi langsung di chat: `https://www.linkedin.com/in/derry-meiraldy-137b77372/`
+- Tertulis di `docs/CONTENT.md` (klaim "terverifikasi dari CV"): `linkedin.com/in/derrymeiraldy`
+
+`content/about.ts` untuk sementara memakai yang **dikonfirmasi di chat**, karena itu sinyal yang lebih kuat daripada berkas CV yang bisa saja sudah usang — tapi ini tebakan, bukan kepastian. Konfirmasi mana yang benar sebelum Fase 3 merender Contact section.
 
 ---
 
