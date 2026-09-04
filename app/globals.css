@@ -73,6 +73,15 @@ a {
   display: flex;
 }
 
+/* Transparent so components/three/Scene.tsx's canvas (z-index 1, behind
+   every .screen at z-index 30) shows through — DESIGN_TWIST.md §6 wants the
+   focal object visible behind the title wordmark, not hidden by the base
+   .screen rule's opaque background. Body's own --ink still backs it, so
+   text contrast is unaffected. */
+#s-title {
+  background: transparent;
+}
+
 .wordmark {
   position: relative;
   width: min(1080px, 88vw);

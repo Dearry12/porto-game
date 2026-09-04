@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, type ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 
 import { initHistory, useNavStore } from '@/lib/nav/store';
 import { SECTION_ORDER } from '@/lib/nav/machine';
@@ -12,6 +13,16 @@ import { Cascade } from '../hub/Cascade';
 import { HubMeta } from '../hub/HubMeta';
 import { BattleScreen } from '../battle/BattleScreen';
 import { ThreatDetail } from '../threat/ThreatDetail';
+
+/**
+ * The known R3F trap (CLAUDE.md): <Canvas> must be dynamically imported with
+ * ssr: false, or the build fails during prerender because `window` is
+ * undefined inside three.js — and the error message doesn't point at this
+ * as the cause. Loaded here, once, globally; components/three/Scene.tsx
+ * itself stays a plain 'use client' component with no dynamic-import
+ * awareness of its own.
+ */
+const Scene = dynamic(() => import('../three/Scene').then((m) => m.Scene), { ssr: false });
 
 /**
  * Owns global keyboard input and browser history. `children` is the static
@@ -97,17 +108,32 @@ export function NavShell({ children }: { children: ReactNode }) {
 
   return (
     <>
+      {/*
+        z-index 1: above the plain body background, below every screen
+        (z-index 30) and #hub/main (z-index 10). #s-title's own background
+        is transparent specifically so this shows through it — DESIGN_TWIST.md
+        §6 wants the object visible behind the title wordmark, not hidden by
+        an opaque screen backdrop.
+      */}
+      <Scene />
       <TitleScreen />
       <Rail />
       {/*
-        Unconditional, like docs/prototype.html's own #hub: no 'screen' class,
-        never display:none. It sits in normal flow (z-index 10) underneath the
-        title screen's fixed, opaque overlay (z-index 30), so a live visitor
-        sees the title first while crawlers and view-source see hub content —
-        including the identity blurb in HubMeta — from the first response,
-        with no dependency on client state ever reaching 'hub'.
+        Unconditional, like docs/prototype.html's own #hub: no 'screen'
+        class, never display:none — the markup and text are always in the
+        DOM, so crawlers and view-source see hub content (including the
+        identity blurb in HubMeta) regardless of client state.
+        #s-title's background is transparent so Scene's canvas (z-index 1)
+        shows through it, but #hub sits between them in z-index (10, versus
+        Scene's 1 and title's 30) — with title transparent, #hub's own
+        content would otherwise paint right over Scene and visibly bleed
+        through the title screen wherever the wordmark doesn't cover it
+        (caught live: the cascade text ghosting behind "MEIRALDY"). Only
+        `visibility`, not `display`, is toggled: it stops the live paint
+        without removing the text a screen reader or crawler would still
+        encounter in the underlying HTML.
       */}
-      <div id="hub">
+      <div id="hub" style={{ visibility: state.kind === 'title' ? 'hidden' : 'visible' }}>
         <InkField seed={5} />
         <Cascade />
         <HubMeta />
