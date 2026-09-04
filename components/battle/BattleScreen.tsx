@@ -8,6 +8,7 @@ import { ARCHETYPES } from '@/content/archetypes';
 import { CommandFan } from './CommandFan';
 import { ThreatField } from './ThreatField';
 import { PartyPanel } from './PartyPanel';
+import { TargetingLine } from './TargetingLine';
 
 /**
  * Input map per docs/MASTER_PROMPT.md §7: left/right move the field cursor,
@@ -62,6 +63,7 @@ export function BattleScreen() {
         </div>
         <CommandFan active={state.archetype} />
         <ThreatField archetype={state.archetype} cursor={state.cursor} />
+        <TargetingLine archetype={state.archetype} cursor={state.cursor} />
         <PartyPanel archetype={state.archetype} />
       </div>
       <div className="b-hints">
