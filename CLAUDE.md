@@ -278,17 +278,12 @@ Angkat verbatim ke `content/about.ts`. Ini satu-satunya sumber kebenaran untuk s
 GitHub    https://github.com/Dearry12
 Email     derry.reisen@gmail.com
 Telepon   +62 878-8794-9083
-LinkedIn  ⚠️ KONFLIK — lihat di bawah, jangan pilih sendiri
+LinkedIn  https://www.linkedin.com/in/derry-meiraldy-137b77372/
 ```
 
 Tautan email memakai `mailto:`, telepon `tel:+6287887949083`. Tautan eksternal memakai `rel="noopener noreferrer"`.
 
-**Konflik LinkedIn, belum terselesaikan.** Dua sumber memberi slug berbeda:
-
-- Dikonfirmasi langsung di chat: `https://www.linkedin.com/in/derry-meiraldy-137b77372/`
-- Tertulis di `docs/CONTENT.md` (klaim "terverifikasi dari CV"): `linkedin.com/in/derrymeiraldy`
-
-`content/about.ts` untuk sementara memakai yang **dikonfirmasi di chat**, karena itu sinyal yang lebih kuat daripada berkas CV yang bisa saja sudah usang — tapi ini tebakan, bukan kepastian. Konfirmasi mana yang benar sebelum Fase 3 merender Contact section.
+**Konflik LinkedIn, sudah terselesaikan.** `docs/CONTENT.md` sempat menulis slug berbeda (`linkedin.com/in/derrymeiraldy`, diklaim "terverifikasi dari CV"). Dikonfirmasi ulang di chat: slug yang benar adalah `derry-meiraldy-137b77372`, sama dengan yang sejak awal dipakai `content/about.ts`. Berkas CV di `docs/CONTENT.md` yang usang, bukan datanya.
 
 ---
 
@@ -321,7 +316,7 @@ Kerjakan berurutan. **Jangan melompat.** Lapor di akhir setiap fase dan berhenti
 
 **Fase 3 mendahului fase 4 itu penting.** Kalau situs belum bisa dinavigasi dan dibaca sebelum ada animasi, animasi itu sedang menutupi fondasi yang rusak.
 
-**Fase saat ini: 4.** Fase 3 selesai — shell statis navigable (hub, section, rail, keyboard, history) sudah jalan, terverifikasi langsung di dev server, bukan cuma `tsc`. Battle dan threat masih placeholder jujur (Fase 5). Konflik LinkedIn di blok Data Kontak di atas **sudah live di Contact section** — belum terselesaikan, konfirmasi secepatnya.
+**Fase saat ini: 4.** Fase 3 selesai — shell statis navigable (hub, section, rail, keyboard, history) sudah jalan, terverifikasi langsung di dev server, bukan cuma `tsc`. Battle dan threat masih placeholder jujur (Fase 5). Konflik LinkedIn sudah terselesaikan (lihat blok Data Kontak).
 
 ---
 

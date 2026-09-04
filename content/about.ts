@@ -8,11 +8,9 @@
  * source file itself describes as numbers "sudah terverifikasi dari CV dan
  * portfolio Academy".
  *
- * LINKEDIN CONFLICT, UNRESOLVED — see CLAUDE.md "Data Kontak (kanonik)".
- * Chat gave `derry-meiraldy-137b77372`; docs/CONTENT.md gives `derrymeiraldy`.
- * The chat-confirmed slug is used below as the more likely current one, but
- * this is a guess, not a confirmed fact. Confirm before Phase 3 renders
- * Contact.
+ * LinkedIn: docs/CONTENT.md's CV export gave a different slug
+ * (`derrymeiraldy`) than the one below. Re-confirmed directly — the slug here
+ * (`derry-meiraldy-137b77372`) is the correct one; the CV export was stale.
  */
 
 import type { AboutContent } from './types';
