@@ -316,7 +316,7 @@ Kerjakan berurutan. **Jangan melompat.** Lapor di akhir setiap fase dan berhenti
 
 **Fase 3 mendahului fase 4 itu penting.** Kalau situs belum bisa dinavigasi dan dibaca sebelum ada animasi, animasi itu sedang menutupi fondasi yang rusak.
 
-**Fase saat ini: 4.** Fase 3 selesai — shell statis navigable (hub, section, rail, keyboard, history) sudah jalan, terverifikasi langsung di dev server, bukan cuma `tsc`. Battle dan threat masih placeholder jujur (Fase 5). Konflik LinkedIn sudah terselesaikan (lihat blok Data Kontak).
+**Fase saat ini: 5.** Fase 4 selesai untuk kriteria "selesai bila"-nya sendiri: title dan hub sudah terbaca sebagai arah §3b (tipografi, XOR wordmark, ink twist, garis ukur, grain), plus wipe GSAP dan drafting-mark index nyata di keempat section sebagai bonus yang juga menyelesaikan sebagian Fase 3. Battle dan threat masih placeholder jujur — command fan, threat field, sigil, party panel, animasi ganti archetype, drafting marks battle (targeting line, name plate skew) semuanya menunggu di sini. Konflik LinkedIn sudah terselesaikan (lihat blok Data Kontak).
 
 ---
 
