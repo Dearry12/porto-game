@@ -257,15 +257,16 @@ Enam keputusan terbuka di MASTER_PROMPT §12 sudah diputuskan. Jangan buka lagi 
 - Fungsi > 40 baris → pecah. Nesting > 3 level → pecah.
 - Komentar menjelaskan **kenapa**, bukan **apa**.
 - Tulis kode, komentar, dan pesan commit dalam **Bahasa Inggris** (repo publik, dibaca recruiter internasional).
-- **Copy antarmuka dalam Bahasa Indonesia.** Bicara ke saya dalam Bahasa Indonesia.
+- **Copy antarmuka dalam Bahasa Inggris.** Ini membalik MASTER_PROMPT.md §8 ("UI copy is Indonesian") atas permintaan eksplisit pemilik — bukan penerapan diam-diam dari item "English toggle" di §13, yang membayangkan dua bahasa berdampingan. Di sini Bahasa Indonesia dilepas sepenuhnya sebagai bahasa dasar situs, bukan ditambah opsi. Semua konten di `content/` (project, threat, about, skill) dan semua string UI di komponen sudah diterjemahkan verbatim-setia, bukan diparafrase atau ditulis ulang bebas — makna dan detail teknisnya harus tetap sama persis dengan sumber Indonesia yang sudah final.
+- Bicara ke saya dalam Bahasa Indonesia — ini soal percakapan kita, terpisah dari bahasa situs di atas.
 
 ---
 
 ## Konten
 
-Seluruh copy di MASTER_PROMPT §8 dan `docs/prototype.html` bersifat **final dan nyata**.
+Seluruh copy di MASTER_PROMPT §8, `docs/CONTENT.md`, dan `docs/prototype.html` bersifat **final dan nyata** — sumber aslinya Bahasa Indonesia. Karena keputusan bahasa di atas, `content/*.ts` sekarang menyimpan **terjemahan Inggris yang setia** dari sumber itu, bukan Indonesia mentah. Terjemahan itulah yang jadi kanonik di kode; kalau butuh menambah data baru nanti, tetap rujuk makna aslinya di `docs/`, jangan menerjemahkan ulang dari terjemahan (rantai terjemahan menggeser makna).
 
-- **Angkat verbatim.** Jangan parafrase, jangan bumbui, jangan tambah.
+- **Angkat verbatim** dari sumber Indonesia, lalu terjemahkan setia — bukan parafrase bebas, bukan bumbu, bukan tambahan. Detail teknis (angka, nama proyek, istilah) tidak boleh berubah makna saat diterjemahkan.
 - Setiap halangan punya **tepat 2 paragraf** `body`.
 - Setiap archetype punya **tepat 3 halangan**. Empat archetype, tidak lebih.
 - Data yang belum ada → tulis `TODO` dan **laporkan**. Jangan karang email, URL, angka metrik, atau nama proyek.
