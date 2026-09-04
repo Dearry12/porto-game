@@ -437,11 +437,368 @@ section:nth-of-type(even) .fact {
 }
 
 .b-hints {
+  width: 100%;
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.8rem 3.5vw;
+  border-top: 1px solid var(--rule);
+  background: rgba(10, 8, 7, 0.75);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--parch-dim);
+}
+
+.b-hints button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.b-hints button:hover {
+  color: var(--ochre);
+}
+
+/* ============ battle ============ */
+
+#s-battle {
+  justify-content: stretch;
+  align-items: stretch;
+  text-align: left;
+  padding: 0;
+  gap: 0;
+  background: radial-gradient(ellipse at 62% 40%, var(--indigo) 0%, var(--ink) 62%);
+}
+
+.b-scene {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+.b-mark {
+  position: absolute;
+  left: 4vw;
+  top: 2rem;
+}
+
+.b-mark .lbl {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--parch-dim);
+}
+
+.b-mark h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  margin-top: 0.2rem;
+}
+
+.b-fan {
+  position: absolute;
+  left: 3.5vw;
+  top: 50%;
+  transform: translateY(-46%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 3;
+}
+
+.fan {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--parch);
+  font-family: inherit;
+  padding: 5px 14px 5px 5px;
+  text-align: left;
+  transition: transform 0.16s, opacity 0.16s;
+  opacity: 0.72;
+}
+
+.fan:nth-child(1) {
+  margin-left: 0;
+}
+.fan:nth-child(2) {
+  margin-left: 22px;
+}
+.fan:nth-child(3) {
+  margin-left: 44px;
+}
+.fan:nth-child(4) {
+  margin-left: 66px;
+}
+
+.fan:hover {
+  opacity: 1;
+  transform: translateX(6px);
+}
+
+.fan .key {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: 1px solid var(--parch-dim);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--parch-dim);
+  transition: 0.16s;
+}
+
+.fan .big {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.1rem, 2vw, 1.7rem);
+  line-height: 0.95;
+  display: block;
+  letter-spacing: -0.02em;
+}
+
+.fan .sm {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--parch-dim);
+  display: block;
+  margin-top: 3px;
+}
+
+.fan[aria-pressed='true'] {
+  opacity: 1;
+  transform: translateX(10px);
+}
+
+.fan[aria-pressed='true'] .key {
+  border-color: var(--ochre);
+  background: var(--ochre);
+  color: var(--ink);
+}
+
+.fan[aria-pressed='true'] .big {
+  color: var(--ochre);
+}
+
+.b-threats {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.threat {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  color: var(--parch);
+  font-family: inherit;
+  transform-origin: center;
+}
+
+.threat:hover {
+  filter: brightness(1.1);
+}
+
+.threat .halo {
+  position: relative;
+  flex: none;
+}
+
+.threat .halo::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border: 1px dashed var(--parch-dim);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.threat.sel .halo::after {
+  opacity: 0.9;
+  border-color: var(--ochre);
+  animation: spin 14s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.threat .tie {
+  width: 36px;
+  height: 1px;
+  background: var(--parch-dim);
+  flex: none;
+}
+
+.threat.sel .tie {
+  background: var(--ochre);
+}
+
+.threat .plate {
+  padding: 5px 14px 6px;
+  background: rgba(14, 11, 9, 0.82);
+  border-left: 2px solid var(--ochre);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.threat .nm {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 0.95rem;
+  display: block;
+}
+
+.threat .lv {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--parch-dim);
+  display: block;
+}
+
+.sig {
+  width: 88px;
+  height: 88px;
+  display: block;
+}
+
+.sig circle,
+.sig polygon,
+.sig line {
+  fill: none;
+  stroke: var(--ochre);
+  stroke-width: 1;
+  opacity: 0.55;
+  transition: opacity 0.18s;
+}
+
+.sig .solid {
+  fill: var(--ochre);
+  stroke: none;
+}
+
+.threat:hover .sig circle,
+.threat:hover .sig polygon,
+.threat:hover .sig line,
+.threat.sel .sig circle,
+.threat.sel .sig polygon,
+.threat.sel .sig line {
+  opacity: 1;
+}
+
+.b-party {
+  position: absolute;
+  right: 2.4vw;
+  bottom: 1rem;
+  width: min(300px, 46vw);
+  z-index: 3;
+  border-left: 2px solid var(--ochre);
+}
+
+.party-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 14px;
+  background: rgba(12, 15, 34, 0.8);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.8rem;
+}
+
+.party-row .lv {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ochre);
+}
+
+@media (max-width: 900px) {
+  .b-mark {
+    position: static;
+    padding: 1.4rem 6vw 0;
+  }
+  .b-scene {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .b-threats {
+    position: static;
+    padding: 1rem 6vw 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .threat {
+    position: static !important;
+    transform: none !important;
+    width: 100%;
+    gap: 0;
+  }
+  .threat .plate {
+    white-space: normal;
+    flex: 1;
+  }
+  .sig {
+    width: 52px;
+    height: 52px;
+  }
+  .threat .tie {
+    width: 18px;
+  }
+  .b-fan {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 1.2rem 6vw 0;
+  }
+  .fan {
+    margin-left: 0 !important;
+    flex: 1 1 46%;
+    padding: 8px 6px;
+  }
+  .fan .big {
+    font-size: 1rem;
+  }
+  .fan .sm {
+    display: none;
+  }
+  .b-party {
+    position: static;
+    margin: 1.4rem 6vw 1.4rem;
+    width: auto;
+  }
+  .b-hints span {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

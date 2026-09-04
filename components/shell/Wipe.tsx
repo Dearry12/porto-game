@@ -34,6 +34,24 @@ export function Wipe() {
     playWipe(el);
   }, [state]);
 
+  useEffect(() => {
+    // xPercent turns into a fixed pixel offset the moment GSAP applies it,
+    // sized to the element's box at that instant. Resizing the viewport
+    // afterward changes that box (inset is %-based) but not the already-set
+    // pixel transform, so the parked wipe can drift back into view — caught
+    // live at 375px after resizing down from 1280px, where roughly the left
+    // third of the screen stayed covered by a stale offset. Between
+    // navigations the wipe should always be sitting off-screen anyway, so a
+    // resize just re-parks it rather than trying to preserve mid-animation
+    // state.
+    function onResize() {
+      const el = ref.current;
+      if (el) resetWipe(el);
+    }
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   return (
     <div
       ref={ref}
