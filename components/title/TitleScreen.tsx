@@ -3,12 +3,10 @@
 import { useEffect, useState } from 'react';
 
 import { useNavStore } from '@/lib/nav/store';
+import { InkField } from '../shell/InkField';
+import { RegistrationMarks } from '../shell/RegistrationMarks';
+import { Wordmark } from './Wordmark';
 
-/**
- * The XOR wordmark knockout from docs/prototype.html is phase 4 work. This is
- * plain text standing in for it so the title screen exists and is navigable
- * now — see CLAUDE.md phase 3 scope ("minimal styling").
- */
 export function TitleScreen() {
   const state = useNavStore((s) => s.state);
   const dispatch = useNavStore((s) => s.dispatch);
@@ -28,8 +26,11 @@ export function TitleScreen() {
       tabIndex={0}
       onClick={() => dispatch({ type: 'enter' })}
     >
-      <h1 className="wm">DERRY MEIRALDY</h1>
+      <InkField seed={2} />
+      <RegistrationMarks />
+      <Wordmark />
       <p className="cue">{isTouch ? 'Ketuk untuk mulai' : 'Tekan tombol apa saja'}</p>
+      <p className="build-line">v0.1.0 · 2026</p>
     </div>
   );
 }

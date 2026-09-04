@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from 'react';
 import { initHistory, useNavStore } from '@/lib/nav/store';
 import { SECTION_ORDER } from '@/lib/nav/machine';
 import { Rail } from './Rail';
+import { InkField } from './InkField';
 import { TitleScreen } from '../title/TitleScreen';
 import { Cascade } from '../hub/Cascade';
 import { HubMeta } from '../hub/HubMeta';
@@ -106,6 +107,7 @@ export function NavShell({ children }: { children: ReactNode }) {
         with no dependency on client state ever reaching 'hub'.
       */}
       <div id="hub">
+        <InkField seed={5} />
         <Cascade />
         <HubMeta />
       </div>
