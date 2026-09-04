@@ -6,7 +6,7 @@ export function Contact() {
     <section id="contact">
       <SectionHead id="contact" title="Contact" />
       <p className="sec-lede">
-        Kalau ada yang ingin dibangun, atau sekadar ingin membahas arsitektur dan JRPG, silakan kirim pesan.
+        If there's something worth building, or you just want to talk architecture and JRPGs, send a message.
       </p>
       <div className="links">
         {ABOUT.contact.map((link) => (

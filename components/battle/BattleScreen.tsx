@@ -16,15 +16,15 @@ export function BattleScreen() {
 
   return (
     <div id="s-battle" className="screen on">
-      <p className="cue">Medan · {state.archetype}</p>
+      <p className="cue">Field · {state.archetype}</p>
       <p style={{ color: 'var(--parch-dim)', maxWidth: '40ch' }}>
-        Command fan dan field halangan belum dibangun — menyusul di Fase 5.
+        Command fan and threat field not built yet — coming in Phase 5.
       </p>
       <div className="b-hints">
-        <kbd>Esc</kbd> kembali ke hub
+        <kbd>Esc</kbd> back to hub
       </div>
       <button type="button" className="lk" onClick={() => dispatch({ type: 'cancel' })}>
-        Kembali
+        Back
       </button>
     </div>
   );

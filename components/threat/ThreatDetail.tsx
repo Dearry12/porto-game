@@ -29,16 +29,16 @@ export function ThreatDetail() {
           <h2 className="wm" style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)' }}>
             {threat.name}
           </h2>
-          <p style={{ color: 'var(--rust)' }}>Lemah terhadap: {threat.weakness}</p>
+          <p style={{ color: 'var(--rust)' }}>Weak against: {threat.weakness}</p>
         </>
       ) : (
-        <p>Halangan tidak ditemukan.</p>
+        <p>Obstacle not found.</p>
       )}
       <p style={{ color: 'var(--parch-dim)', maxWidth: '40ch' }}>
-        Layout penuh (body, panel bukti) belum dibangun — menyusul di Fase 5.
+        Full layout (body, proof panel) not built yet — coming in Phase 5.
       </p>
       <button type="button" className="lk" onClick={() => dispatch({ type: 'cancel' })}>
-        Kembali
+        Back
       </button>
     </div>
   );

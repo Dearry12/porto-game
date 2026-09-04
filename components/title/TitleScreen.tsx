@@ -29,7 +29,7 @@ export function TitleScreen() {
       <InkField seed={2} />
       <RegistrationMarks />
       <Wordmark />
-      <p className="cue">{isTouch ? 'Ketuk untuk mulai' : 'Tekan tombol apa saja'}</p>
+      <p className="cue">{isTouch ? 'Tap to start' : 'Press any key to start'}</p>
       <p className="build-line">v0.1.0 · 2026</p>
     </div>
   );

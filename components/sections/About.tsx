@@ -28,14 +28,14 @@ export function About() {
 
       <div className="facts">
         <div className="fact">
-          <span>Pendidikan</span>
+          <span>Education</span>
           <span>
             {education.degree}, {education.institution} — {education.location}. {education.graduation},{' '}
             {education.gpa}.
           </span>
         </div>
         <div className="fact">
-          <span>Skripsi</span>
+          <span>Thesis</span>
           <span>{education.thesis}</span>
         </div>
       </div>
@@ -70,7 +70,7 @@ export function About() {
       <div className="facts">
         {awards.map((line) => (
           <div className="fact" key={line}>
-            <span>Penghargaan</span>
+            <span>Award</span>
             <span>{line}</span>
           </div>
         ))}

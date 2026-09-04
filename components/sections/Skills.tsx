@@ -5,9 +5,7 @@ export function Skills() {
   return (
     <section id="skill">
       <SectionHead id="skill" title="Skill" />
-      <p className="sec-lede">
-        Tanpa persentase. Tiap baris membawa buktinya sendiri.
-      </p>
+      <p className="sec-lede">No percentages. Every line carries its own evidence.</p>
       <div className="stats">
         {SKILLS.map((group) => (
           <div className="stat-group" key={group.label}>

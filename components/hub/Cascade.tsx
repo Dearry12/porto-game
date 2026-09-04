@@ -7,18 +7,20 @@ import type { NavEvent, SectionId } from '@/lib/nav/machine';
 
 /**
  * The five hub items and their subtitles. This is nav-structural UI copy
- * (Indonesian, per CLAUDE.md), not case-study content, so it lives beside the
- * component rather than in content/ alongside projects/skills/about data.
+ * (English, per CLAUDE.md's language decision), not case-study content, so
+ * it lives beside the component rather than in content/ alongside
+ * projects/skills/about data.
  *
- * "Delapan karya" was "Enam karya" in docs/prototype.html — updated because
- * content/projects.ts now holds eight projects, not six (see docs/CONTENT.md).
+ * "Eight works" was "Enam karya" ("Six works") in docs/prototype.html —
+ * updated because content/projects.ts now holds eight projects, not six
+ * (see docs/CONTENT.md).
  */
 const ITEMS: Array<{ label: string; sub: string; event: NavEvent }> = [
-  { label: 'Start', sub: 'Empat medan', event: { type: 'start' } },
-  { label: 'Project', sub: 'Delapan karya', event: { type: 'warp', to: 'project' } },
+  { label: 'Start', sub: 'Four fields', event: { type: 'start' } },
+  { label: 'Project', sub: 'Eight works', event: { type: 'warp', to: 'project' } },
   { label: 'Skill', sub: 'Status', event: { type: 'warp', to: 'skill' } },
-  { label: 'About', sub: 'Riwayat', event: { type: 'warp', to: 'about' } },
-  { label: 'Contact', sub: 'Surat', event: { type: 'warp', to: 'contact' } },
+  { label: 'About', sub: 'History', event: { type: 'warp', to: 'about' } },
+  { label: 'Contact', sub: 'Mail', event: { type: 'warp', to: 'contact' } },
 ];
 
 /**

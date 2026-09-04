@@ -12,8 +12,8 @@ export function Projects() {
     <section id="project">
       <SectionHead id="project" title="Project" />
       <p className="sec-lede">
-        Delapan proyek yang saya kerjakan sampai selesai. Sebagian besar punya modul logika yang berdiri sendiri
-        tanpa framework antarmuka.
+        Eight projects I saw through to completion. Most of them have a logic module that stands on its own,
+        with no UI framework attached.
       </p>
       <div className="grid">
         {PROJECTS.map((project) => (

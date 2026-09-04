@@ -35,13 +35,12 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Derry Meiraldy',
-  description:
-    'Mobile & Web Developer, peminat game development. Portfolio dengan navigasi select-not-scroll.',
+  description: 'Mobile & Web Developer, game development enthusiast. A portfolio navigated by select, not scroll.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${bodoniModa.variable} ${archivoNarrow.variable} ${jetBrainsMono.variable}`}>
+    <html lang="en" className={`${bodoniModa.variable} ${archivoNarrow.variable} ${jetBrainsMono.variable}`}>
       <body>
         <div className="grain" aria-hidden="true" />
         {children}

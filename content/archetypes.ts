@@ -1,8 +1,14 @@
 /**
- * The four battle archetypes, per docs/MASTER_PROMPT.md §8. Obstacle names,
- * taglines, weaknesses, and the two-paragraph body copy are lifted verbatim
- * from the ARCH data in docs/prototype.html — the master prompt explicitly
- * says to port this rather than rewrite it.
+ * The four battle archetypes, per docs/MASTER_PROMPT.md §8, translated from
+ * the Indonesian source — see CLAUDE.md's Konten section for the language
+ * decision. Obstacle names, taglines, weaknesses, and body copy trace back
+ * to the ARCH data in docs/prototype.html by way of a faithful English
+ * translation, not a rewrite; every technical claim (numbers, method names,
+ * project names) carries the same meaning as the Indonesian original.
+ *
+ * `slug` values are now English kebab-case to match — nothing in the
+ * codebase looks threats up by slug yet (ThreatDetail.tsx indexes by array
+ * position), so renaming them here has no functional effect.
  *
  * `party` counts: computed by counting, per archetype, how many of the
  * projects in content/projects.ts that are cross-linked to that archetype
@@ -11,13 +17,13 @@
  * Pivot and HeatNest Tech are real, verified work but aren't named as proof
  * of any of the twelve obstacles below, so they don't move these counts.
  * These numbers still only know about the six cross-linked projects, not
- * other real work (e.g. Situs Uneed Developer, the laundry management
+ * other real work (e.g. the Uneed Developer site, the laundry management
  * system) that has no project card at all. Several counts below are 0 or 1
- * as a result, which understates real usage, most visibly for "Arsitektur
- * modul" — the inherited-skill pattern is the strongest claim in the whole
- * portfolio and spans every project, not zero. Treat these as provisional
- * and confirm the real per-tool project counts before this renders in
- * Phase 4/5.
+ * as a result, which understates real usage, most visibly for "Module
+ * architecture" — the inherited-skill pattern is the strongest claim in the
+ * whole portfolio and spans every project, not zero. Treat these as
+ * provisional and confirm the real per-tool project counts before this
+ * renders in Phase 4/5.
  *
  * `lineage` notes: only the mobile archetype's lineage in the master prompt
  * names a project per stage ("(DomPet)", "(Patungan)", "(StepOut, Lantang)").
@@ -29,10 +35,10 @@
 import type { Archetype } from './types';
 
 export const INHERITED_SKILL = {
-  // Reused verbatim from the "Bug yang Tak Terlihat" threat below, so this
+  // Reused verbatim from the "The Invisible Bug" threat below, so this
   // shared passive isn't a new sentence invented for this constant.
-  name: 'Modul murni tanpa import framework',
-  note: 'SplitEngine, StepOutCore, LantangCore, dan core/ di Emberfall memakai bentuk yang sama.',
+  name: 'Pure modules with no framework imports',
+  note: "SplitEngine, StepOutCore, LantangCore, and Emberfall's core/ all use the same shape.",
 };
 
 export const ARCHETYPES: Archetype[] = [
@@ -40,64 +46,64 @@ export const ARCHETYPES: Archetype[] = [
     id: 'mobile',
     name: 'Mobile development',
     short: 'Mobile',
-    field: 'Aplikasi iOS dan Flutter',
+    field: 'iOS and Flutter apps',
     party: [
       ['Swift, SwiftUI', 2],
       ['Flutter, Dart', 1],
       ['SwiftData', 1],
     ],
     lineage: [
-      { title: 'Flutter dan Firebase', note: 'DomPet' },
-      { title: 'SwiftUI dan SwiftData', note: 'Patungan' },
-      { title: 'SpriteKit dan Foundation Models', note: 'StepOut, Lantang' },
+      { title: 'Flutter and Firebase', note: 'DomPet' },
+      { title: 'SwiftUI and SwiftData', note: 'Patungan' },
+      { title: 'SpriteKit and Foundation Models', note: 'StepOut, Lantang' },
     ],
     threats: [
       {
-        slug: 'tanpa-internet',
-        name: 'Tanpa Internet',
+        slug: 'offline-first',
+        name: 'No Internet',
         level: 'LV 32',
-        tagline: 'Semua fitur harus tetap jalan offline',
-        weakness: 'Penyimpanan lokal sebagai sumber kebenaran',
+        tagline: 'Every feature has to keep working offline',
+        weakness: 'Local storage as the source of truth',
         body: [
-          'Aplikasi keuangan dipakai justru saat sinyal buruk: di kasir, di parkiran, di warung. Kalau data hidup di server, aplikasinya mati bersama koneksinya.',
-          'Di Patungan saya jadikan penyimpanan lokal sebagai satu-satunya sumber kebenaran, bukan cache. SwiftData memegang seluruh keadaan, dan tidak ada satu pun jalur yang menunggu jaringan sebelum menampilkan sesuatu. Sinkronisasi kalau ada, jadi lapisan tambahan di atasnya, bukan syarat.',
+          'Finance apps get used exactly when signal is bad: at the register, in a parking lot, at a corner shop. If the data lives on a server, the app dies along with the connection.',
+          'In Patungan I made local storage the single source of truth, not a cache. SwiftData holds the entire state, and no code path waits on the network before showing something. Syncing, if it exists, is an extra layer on top, not a requirement.',
         ],
         proof: {
           project: 'Patungan',
           kind: 'iOS',
-          note: 'Empat mesin Swift murni tanpa dependensi pihak ketiga. Pembagian sisa terbesar dan penyederhanaan utang berjalan sepenuhnya di perangkat.',
+          note: 'Four pure Swift engines with zero third-party dependencies. Largest-remainder splitting and debt simplification both run entirely on-device.',
         },
       },
       {
-        slug: 'struk-yang-buram',
-        name: 'Struk yang Buram',
+        slug: 'blurry-receipts',
+        name: 'Blurry Receipts',
         level: 'LV 41',
-        tagline: 'OCR di dunia nyata tidak pernah bersih',
-        weakness: 'Pipeline bertahap dengan skor keyakinan',
+        tagline: 'Real-world OCR is never clean',
+        weakness: 'A staged pipeline with confidence scoring',
         body: [
-          'Struk asli terlipat, buram, dan dicetak dengan tinta yang hampir habis. Model pengenalan teks yang bagus di data uji akan gagal di kondisi ini.',
-          'Solusinya bukan model yang lebih besar, tapi pipeline yang mengakui ketidakpastian. Praproses citra, ekstraksi teks, lalu penguraian dengan aturan yang memberi skor keyakinan per baris. Baris yang skornya rendah dilempar ke pengguna untuk dikoreksi, bukan disimpan diam-diam sebagai data salah.',
+          "Real receipts are folded, blurry, and printed with ink that's nearly out. A text-recognition model that looks great on a benchmark will fail under these conditions.",
+          "The fix isn't a bigger model, it's a pipeline that admits uncertainty. Image preprocessing, text extraction, then rule-based parsing that assigns a confidence score per line. Low-scoring lines get handed back to the user for correction, instead of being silently stored as wrong data.",
         ],
         proof: {
           project: 'DomPet',
           kind: 'Flutter',
-          note: 'Akurasi 83,33% dari 30 struk nyata, skor uji penerimaan 88,22%, 85 unit test.',
+          note: '83.33% accuracy across 30 real receipts, 88.22% acceptance-test score, 85 unit tests.',
         },
       },
       {
-        slug: 'baterai-dan-memori',
-        name: 'Baterai dan Memori',
+        slug: 'battery-and-memory',
+        name: 'Battery and Memory',
         level: 'LV 47',
-        tagline: 'Pemrosesan bahasa tanpa menyentuh server',
-        weakness: 'Ukur dulu, baru minta model bahasa bicara',
+        tagline: 'Language processing without touching a server',
+        weakness: 'Measure first, only then let the language model speak',
         body: [
-          'Menjalankan model bahasa di ponsel itu mahal. Kalau setiap penilaian memanggil model, baterai habis dan hasilnya tidak konsisten antar percobaan.',
-          'Di Lantang saya pisah jadi tiga lapis. Lapis pertama mengukur secara deterministik: kerapatan kata pengisi, taksonomi jeda, kecepatan bicara dalam suku kata per detik. Lapis kedua memilih temuan mana yang layak disampaikan, dengan rumus, bukan model. Model bahasa baru masuk di lapis ketiga, hanya untuk merangkai kalimat. Angkanya selalu sama untuk rekaman yang sama.',
+          'Running a language model on a phone is expensive. If every assessment calls the model, the battery drains and results stop being consistent between attempts.',
+          'In Lantang I split it into three layers. The first layer measures deterministically: filler-word density, pause taxonomy, speaking rate in syllables per second. The second layer picks which findings are worth surfacing, by formula, not by model. The language model only enters at the third layer, purely to phrase the sentence. The numbers are always the same for the same recording.',
         ],
         proof: {
           project: 'Lantang',
           kind: 'iOS',
-          note: 'Foundation Models di perangkat, LantangCore sebagai Swift Package headless dengan 11 unit test.',
+          note: 'On-device Foundation Models, LantangCore as a headless Swift Package with 11 unit tests.',
         },
       },
     ],
@@ -106,64 +112,64 @@ export const ARCHETYPES: Archetype[] = [
     id: 'web',
     name: 'Website development',
     short: 'Website',
-    field: 'Antarmuka statis dan 3D',
+    field: 'Static interfaces and 3D',
     party: [
       ['TypeScript', 0],
       ['Next.js, React', 0],
       ['Three.js, GLSL', 1],
     ],
     lineage: [
-      { title: 'Laravel dan SQLite', note: '' },
-      { title: 'Next.js dan Tailwind', note: '' },
+      { title: 'Laravel and SQLite', note: '' },
+      { title: 'Next.js and Tailwind', note: '' },
       { title: 'SvelteKit, Threlte, GLSL', note: '' },
     ],
     threats: [
       {
-        slug: 'muat-pertama',
-        name: 'Muat Pertama',
+        slug: 'first-load',
+        name: 'First Load',
         level: 'LV 28',
-        tagline: 'Berat di balik layar, instan di depan mata',
-        weakness: 'Static generation dan anggaran dependensi',
+        tagline: 'Heavy behind the scenes, instant to the eye',
+        weakness: 'Static generation and a dependency budget',
         body: [
-          'Halaman yang butuh tiga detik untuk muncul sudah kalah sebelum dibaca. Dan penyebab tersering bukan gambar, tapi JavaScript yang dikirim untuk hal yang sebenarnya statis.',
-          'Pendekatan saya: hasilkan HTML saat build, kirim JavaScript hanya untuk bagian yang benar-benar interaktif, dan perlakukan setiap dependensi sebagai utang yang harus dibenarkan. Portfolio saya berjalan tanpa satu pun pustaka animasi karena CSS sudah cukup.',
+          "A page that takes three seconds to appear has already lost before anyone reads it. And the most common cause isn't images, it's JavaScript shipped for something that was actually static.",
+          "My approach: generate HTML at build time, ship JavaScript only for what's genuinely interactive, and treat every dependency as debt that has to justify itself. My portfolio runs without a single animation library because CSS is already enough.",
         ],
         proof: {
           project: 'derrymeiraldy.vercel.app',
           kind: 'Web',
-          note: 'Next.js App Router, TypeScript ketat, Tailwind v4, static generation di Vercel.',
+          note: 'Next.js App Router, strict TypeScript, Tailwind v4, static generation on Vercel.',
         },
       },
       {
-        slug: 'halaman-yang-mati',
-        name: 'Halaman yang Mati',
+        slug: 'the-dead-page',
+        name: 'The Dead Page',
         level: 'LV 44',
-        tagline: 'Rapi, benar, dan sama sekali tak berkesan',
-        weakness: 'Satu momen berani, sisanya diam',
+        tagline: 'Tidy, correct, and completely forgettable',
+        weakness: 'One bold moment, stillness everywhere else',
         body: [
-          'Banyak portfolio benar secara teknis tapi tidak meninggalkan apa pun di kepala orang. Masalahnya bukan kurang efek, justru sering kelebihan: setiap bagian punya animasi masuk, dan tidak ada yang menonjol.',
-          'Di NULLFEED saya belanjakan seluruh keberanian di satu tempat. Satu objek, satu uniform bernama corruption yang menggerakkan distorsi, dan seluruh halaman diam di sekelilingnya. Yang membuatnya bekerja bukan jumlah efeknya, tapi keputusan tentang apa yang tidak dianimasikan.',
+          "A lot of portfolios are technically correct but leave nothing behind in anyone's head. The problem usually isn't too few effects, it's too many: every section has its own entrance animation, and nothing stands out.",
+          "In NULLFEED I spent all the boldness in one place. One object, one uniform called corruption driving the distortion, and the entire rest of the page stays still around it. What makes it work isn't the number of effects, it's the decision about what doesn't get animated.",
         ],
         proof: {
           project: 'NULLFEED',
           kind: 'Web',
-          note: 'SvelteKit dengan Svelte 5 runes, Threlte, shader GLSL sendiri, GSAP ScrollTrigger, post-processing.',
+          note: 'SvelteKit with Svelte 5 runes, Threlte, a hand-written GLSL shader, GSAP ScrollTrigger, post-processing.',
         },
       },
       {
-        slug: 'tumpukan-dependensi',
-        name: 'Tumpukan Dependensi',
+        slug: 'the-dependency-pile',
+        name: 'The Dependency Pile',
         level: 'LV 35',
-        tagline: 'Setiap paket adalah utang yang jatuh tempo',
-        weakness: 'Menolak sebelum menambah',
+        tagline: 'Every package is debt that comes due',
+        weakness: 'Say no before you add',
         body: [
-          'Proyek web mudah membengkak. Satu pustaka tanggal, satu pustaka ikon, satu pustaka animasi, dan tiba-tiba pembaruan keamanan jadi pekerjaan mingguan.',
-          'Aturan saya sederhana: sebuah paket masuk hanya kalau menulisnya sendiri akan memakan lebih dari sehari atau berisiko salah secara halus. Format tanggal tidak lolos. Shader post-processing lolos.',
+          'Web projects bloat easily. One date library, one icon library, one animation library, and suddenly security updates become a weekly chore.',
+          "My rule is simple: a package gets in only if writing it myself would take more than a day, or would risk being subtly wrong. Date formatting doesn't clear that bar. A post-processing shader does.",
         ],
         proof: {
-          project: 'Situs Uneed Developer',
+          project: 'Uneed Developer site',
           kind: 'Web',
-          note: 'Next.js 15, React 19, Tailwind v4, Prisma dengan PostgreSQL, NextAuth.js.',
+          note: 'Next.js 15, React 19, Tailwind v4, Prisma with PostgreSQL, NextAuth.js.',
         },
       },
     ],
@@ -172,64 +178,64 @@ export const ARCHETYPES: Archetype[] = [
     id: 'software',
     name: 'Software development',
     short: 'Software',
-    field: 'Logika inti dan model data',
+    field: 'Core logic and data models',
     party: [
-      ['Arsitektur modul', 0],
-      ['Pengujian', 0],
+      ['Module architecture', 0],
+      ['Testing', 0],
       ['Prisma, PostgreSQL', 0],
     ],
     lineage: [
       { title: 'Unit testing', note: '' },
-      { title: 'Prisma dan PostgreSQL', note: '' },
-      { title: 'Python dan scikit-learn', note: '' },
+      { title: 'Prisma and PostgreSQL', note: '' },
+      { title: 'Python and scikit-learn', note: '' },
     ],
     threats: [
       {
-        slug: 'bug-yang-tak-terlihat',
-        name: 'Bug yang Tak Terlihat',
+        slug: 'the-invisible-bug',
+        name: 'The Invisible Bug',
         level: 'LV 50',
-        tagline: 'Logika yang tidak pernah diuji sendirian',
-        weakness: 'Modul murni tanpa import framework',
+        tagline: 'Logic that never gets tested on its own',
+        weakness: 'Pure modules with no framework imports',
         body: [
-          'Logika yang menempel pada widget hanya bisa diuji dengan menjalankan aplikasinya. Artinya jarang diuji, dan kesalahan baru ketahuan di tangan pengguna.',
-          'Saya balik urutannya. Bagian yang bisa salah, seperti pembagian uang, penjadwalan giliran, atau penilaian ucapan, saya letakkan di modul yang tidak mengimpor satu pun framework antarmuka. Modul itu diuji tanpa membuka simulator. Antarmuka datang belakangan sebagai pembaca.',
+          "Logic that's glued to a widget can only be tested by running the whole app. Which means it rarely gets tested, and mistakes only surface in a user's hands.",
+          "I flip the order. The part that can be wrong — splitting money, scheduling turns, assessing speech — goes into a module that doesn't import a single UI framework. That module gets tested without ever opening a simulator. The interface arrives later, as a reader.",
         ],
         proof: {
-          project: 'Pola inti di semua proyek',
-          kind: 'Arsitektur',
-          note: 'SplitEngine, StepOutCore, LantangCore, dan core/ di Emberfall memakai bentuk yang sama.',
+          project: 'The core pattern across every project',
+          kind: 'Architecture',
+          note: "SplitEngine, StepOutCore, LantangCore, and Emberfall's core/ all use the same shape.",
         },
       },
       {
-        slug: 'data-yang-kusut',
-        name: 'Data yang Kusut',
+        slug: 'the-tangled-schema',
+        name: 'The Tangled Schema',
         level: 'LV 38',
-        tagline: 'Relasi yang tumbuh tanpa rencana',
-        weakness: 'Skema dulu, fitur belakangan',
+        tagline: 'Relations that grow with no plan',
+        weakness: 'Schema first, features after',
         body: [
-          'Skema yang dibiarkan tumbuh mengikuti fitur akan berakhir dengan kolom yang artinya bergantung pada kolom lain, dan kueri yang tidak ada yang berani sentuh.',
-          'Saya mulai dari model data, bukan dari halaman. Untuk situs studio, entitas dan relasinya saya kunci di skema Prisma sebelum satu komponen pun ditulis. Migrasi jadi catatan sejarah yang bisa dibaca, bukan tumpukan tambalan.',
+          'A schema left to grow feature-by-feature ends up with columns whose meaning depends on other columns, and queries nobody dares touch.',
+          'I start from the data model, not the page. For the studio site, I locked down the entities and relations in a Prisma schema before writing a single component. Migrations become a readable history, not a pile of patches.',
         ],
         proof: {
-          project: 'Sistem manajemen laundry',
+          project: 'Laundry management system',
           kind: 'Backend',
-          note: 'Laravel 11 dengan SQLite, metode Waterfall, pengujian Black Box, terdokumentasi penuh.',
+          note: 'Laravel 11 with SQLite, the Waterfall method, Black Box testing, fully documented.',
         },
       },
       {
-        slug: 'aturan-yang-berubah',
-        name: 'Aturan yang Berubah',
+        slug: 'shifting-requirements',
+        name: 'Shifting Requirements',
         level: 'LV 36',
-        tagline: 'Kebutuhan bergeser di tengah pengerjaan',
-        weakness: 'Batas modul yang jelas',
+        tagline: 'Requirements shift mid-build',
+        weakness: 'Clear module boundaries',
         body: [
-          'Perubahan kebutuhan tidak bisa dicegah. Yang bisa diatur adalah seberapa jauh perubahan itu merambat.',
-          'Kalau aturan bisnis hidup di satu modul murni, mengubahnya berarti mengubah satu berkas dan menjalankan ulang pengujiannya. Kalau aturan itu tersebar di tujuh komponen antarmuka, mengubahnya berarti berburu.',
+          "Requirement changes can't be prevented. What can be controlled is how far a change propagates.",
+          'If a business rule lives in one pure module, changing it means editing one file and rerunning its tests. If that rule is scattered across seven UI components, changing it means hunting.',
         ],
         proof: {
-          project: 'Jurnal Random Forest dan SVM',
-          kind: 'Penelitian',
-          note: 'Eksperimen scikit-learn nyata pada Pima Indians Diabetes Dataset, terbit format JUKTISI dengan 17 referensi IEEE.',
+          project: 'Random Forest and SVM journal paper',
+          kind: 'Research',
+          note: 'Real scikit-learn experiments on the Pima Indians Diabetes Dataset, published in JUKTISI format with 17 IEEE references.',
         },
       },
     ],
@@ -238,64 +244,64 @@ export const ARCHETYPES: Archetype[] = [
     id: 'game',
     name: 'Game development',
     short: 'Game',
-    field: 'Peminat dengan sistem yang sudah jalan',
+    field: 'An enthusiast with systems that actually run',
     party: [
-      ['Desain sistem', 0],
+      ['Systems design', 0],
       ['Godot, GDScript', 1],
       ['SpriteKit', 1],
     ],
     lineage: [
-      { title: 'Desain sistem', note: '' },
+      { title: 'Systems design', note: '' },
       { title: 'SpriteKit', note: '' },
       { title: 'Godot 4.5', note: '' },
     ],
     threats: [
       {
-        slug: 'keseimbangan',
-        name: 'Keseimbangan',
+        slug: 'balance',
+        name: 'Balance',
         level: 'LV 46',
-        tagline: 'Angka yang terasa benar tapi tak terbukti',
-        weakness: 'Simulasi ribuan run, bukan firasat',
+        tagline: 'Numbers that feel right but are unproven',
+        weakness: 'Thousands of simulated runs, not a hunch',
         body: [
-          'Menyeimbangkan permainan dengan cara memainkannya sendiri berarti mempercayai perasaan setelah dua puluh kali coba. Itu tidak cukup untuk menemukan jalur build yang terlalu kuat.',
-          'Di StepOut saya bangun harness yang menjalankan 2.000 run tersimulasi tanpa membuka jendela permainan. Hasilnya bukan cuma angka menang-kalah, tapi temuan struktural: jalur mana yang runtuh di ronde berapa, dan upgrade mana yang tidak pernah dipilih. Semuanya saya catat di BALANCING.md.',
+          "Balancing a game by playing it yourself means trusting a feeling after twenty attempts. That's not enough to catch a build path that's simply too strong.",
+          'In StepOut I built a harness that runs 2,000 simulated runs without ever opening the game window. The results aren\'t just win-loss numbers, they\'re structural findings: which paths collapse at which round, and which upgrades never get picked. I log all of it in BALANCING.md.',
         ],
         proof: {
           project: 'StepOut',
           kind: 'iOS',
-          note: '15 upgrade dalam empat jalur build: Venom, Riposte, Brink, dan Tempo.',
+          note: '15 upgrades across four build paths: Venom, Riposte, Brink, and Tempo.',
         },
       },
       {
-        slug: 'acak-yang-tak-terulang',
-        name: 'Acak yang Tak Terulang',
+        slug: 'unrepeatable-randomness',
+        name: 'Unrepeatable Randomness',
         level: 'LV 39',
-        tagline: 'Bug yang menghilang saat dicari',
-        weakness: 'RNG berbenih yang dapat direproduksi',
+        tagline: 'A bug that vanishes when you go looking for it',
+        weakness: 'A seeded, reproducible RNG',
         body: [
-          'Kalau keacakan diambil dari sumber sistem, satu run tidak bisa diputar ulang. Laporan bug jadi tidak berguna dan pengujian otomatis jadi mustahil.',
-          'Saya pakai SplitMix64 dengan benih eksplisit yang jadi bagian dari keadaan permainan. Benih yang sama menghasilkan run yang sama persis, sehingga harness penyeimbang bisa berjalan deterministik dan setiap kesalahan bisa diulang.',
+          'If randomness comes from a system source, a single run can never be replayed. Bug reports become useless and automated testing becomes impossible.',
+          "I use SplitMix64 with an explicit seed that's itself part of the game state. The same seed produces the exact same run, so the balancing harness can run deterministically and every mistake can be reproduced.",
         ],
         proof: {
           project: 'StepOutCore',
           kind: 'Swift Package',
-          note: 'Nol import SpriteKit. Kontrak resolve(state, action) mengembalikan keadaan baru dan aliran peristiwa.',
+          note: 'Zero SpriteKit imports. The resolve(state, action) contract returns a new state and a stream of events.',
         },
       },
       {
-        slug: 'giliran-yang-kacau',
-        name: 'Giliran yang Kacau',
+        slug: 'chaotic-turn-order',
+        name: 'Chaotic Turn Order',
         level: 'LV 42',
-        tagline: 'Urutan aksi yang tidak bisa diprediksi',
-        weakness: 'Tick accumulator, bukan antrean ad hoc',
+        tagline: "An action order you can't predict",
+        weakness: 'A tick accumulator, not an ad hoc queue',
         body: [
-          'Sistem giliran yang dibangun dari timer dan panggilan balik akan menghasilkan urutan berbeda pada perangkat berbeda. Untuk permainan taktis, itu fatal.',
-          'Penjadwalnya saya buat sebagai akumulator tick: setiap entitas mengumpulkan nilai berdasarkan kecepatannya, dan yang melewati ambang lebih dulu mendapat giliran. Murni aritmetika bilangan bulat, tanpa waktu nyata, jadi hasilnya identik di mana pun.',
+          "A turn system built from timers and callbacks will produce a different order on different devices. For a tactical game, that's fatal.",
+          'I built the scheduler as a tick accumulator: every entity accumulates a value based on its speed, and whoever crosses the threshold first gets the turn. Pure integer arithmetic, no real-time clock, so the outcome is identical everywhere.',
         ],
         proof: {
           project: 'Emberfall',
           kind: 'Godot',
-          note: 'Mekanik Break dan Boost dengan sistem Turn Weaving, logika pertarungan murni di core/.',
+          note: 'Break and Boost mechanics with a Turn Weaving system, combat logic kept pure in core/.',
         },
       },
     ],
