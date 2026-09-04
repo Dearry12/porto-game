@@ -247,6 +247,16 @@ describe('section', () => {
   it('cancels back to the hub', () => {
     expect(transition(section('contact'), { type: 'cancel' })).toEqual({ kind: 'hub' });
   });
+
+  // OPEN QUESTION, decide before phase 3.
+  // The transition table in the brief has no section -> start row, so start is
+  // ignored here. But the rail carries a Start item and the rail is visible in
+  // sections, which would leave a live button doing nothing. Either the rail
+  // routes through cancel-then-start, or this becomes a real transition.
+  it('ignores start, because the brief lists no section -> battle transition', () => {
+    const state = section('project');
+    expect(transition(state, { type: 'start' })).toBe(state);
+  });
 });
 
 describe('escape climbs exactly one level, from anywhere', () => {
