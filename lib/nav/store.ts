@@ -31,12 +31,30 @@ export const useNavStore = create<NavStore>((set, get) => ({
     const next = transition(current, event);
     if (next === current) return;
     set({ state: next });
+    if (typeof window !== 'undefined' && current.kind === 'title' && next.kind !== 'title') {
+      markTitleSeen();
+    }
     if (typeof window !== 'undefined' && pushesHistory(next)) {
       window.history.pushState(next, '', hashFor(next));
     }
   },
   restore: (state) => set({ state }),
 }));
+
+/**
+ * MASTER_PROMPT.md §10: returning visitors skip straight to the hub. Scoped
+ * to sessionStorage, not localStorage — this should re-arm every new tab or
+ * browser session, not follow the visitor forever.
+ */
+const TITLE_SEEN_KEY = 'meiraldy:title-seen';
+
+function markTitleSeen(): void {
+  window.sessionStorage.setItem(TITLE_SEEN_KEY, '1');
+}
+
+function hasSeenTitle(): boolean {
+  return window.sessionStorage.getItem(TITLE_SEEN_KEY) === '1';
+}
 
 function hashFor(state: NavState): string {
   switch (state.kind) {
@@ -52,6 +70,15 @@ function hashFor(state: NavState): string {
 }
 
 /**
+ * Also applies the §10 return-visitor skip before syncing history: jumping
+ * straight to hub here, ahead of the replaceState below, means the URL and
+ * the state end up in agreement (`#hub`, not the title's empty hash) without
+ * a second history entry. The jump still runs through Wipe like any other
+ * transition — restore() changes `state`, and Wipe's effect reacts to any
+ * state change regardless of what triggered it — so a returning visitor
+ * sees the same instant-cover-reveal language as every other jump on the
+ * site, not a special-cased snap.
+ *
  * Wires popstate so browser Back/Forward replays history rather than the
  * transition table. Only hub, section, and threat ever appear here — title
  * and battle are transient and were never pushed (see `pushesHistory`), so
@@ -63,6 +90,10 @@ function hashFor(state: NavState): string {
  * Returns a cleanup function. Must run once, client-side only.
  */
 export function initHistory(): () => void {
+  if (useNavStore.getState().state.kind === 'title' && hasSeenTitle()) {
+    useNavStore.getState().restore({ kind: 'hub' });
+  }
+
   const { state } = useNavStore.getState();
   window.history.replaceState(state, '', hashFor(state));
 
