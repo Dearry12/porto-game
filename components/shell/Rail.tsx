@@ -52,7 +52,7 @@ export function Rail() {
   ];
 
   return (
-    <nav id="rail" aria-label="Navigasi utama">
+    <nav id="rail" aria-label="Main navigation">
       <div className="rail-rule" aria-hidden="true" />
       {items.map((item, i) => (
         <button

@@ -224,6 +224,18 @@ main {
   z-index: 10;
 }
 
+/* Same #rail clearance as #hub's own padding-left:220px (both sit in
+   normal flow, so padding-left indents them correctly, unlike .b-scene's
+   absolutely-positioned children above). Missing here meant every section's
+   heading and first grid column started inside the rail's 200px zone at
+   any width from 701px up — confirmed by measuring #project .sec-head
+   against #rail at 1280px width, where both landed at x:~102px. */
+@media (min-width: 701px) {
+  main {
+    padding-left: 220px;
+  }
+}
+
 section {
   padding: 5rem 8vw;
   border-top: 1px solid var(--rule);
@@ -491,6 +503,26 @@ section:nth-of-type(even) .fact {
   flex: 1;
   width: 100%;
   overflow: hidden;
+}
+
+/* #rail is a fixed 200px-wide left sidebar down to 700px (below that it
+   becomes a bottom bar instead — see the max-width:700px block far below).
+   .b-scene spans the full .screen width including the strip underneath the
+   sidebar, so without this it silently sits behind the rail: caught by
+   measuring .b-mark's rect against #rail's rect at 1280px width, where the
+   command fan's archetype labels rendered directly under the rail's own
+   Project/Skill/About/Contact labels, both partially legible and both
+   unreadable. margin-left + a matching width reduction, not padding: the
+   containing block that .b-mark/.b-fan/.b-threats/.b-party resolve their
+   left/right percentages against is .b-scene's padding edge, which padding
+   sits inside of and therefore can't move — only shifting the box itself
+   moves it (confirmed live: padding-left:200px left every absolute child's
+   getBoundingClientRect() completely unchanged). */
+@media (min-width: 701px) {
+  .b-scene {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
 }
 
 .b-mark {
@@ -814,6 +846,18 @@ section:nth-of-type(even) .fact {
   }
 }
 
+/* #rail only becomes the fixed bottom bar below 700px (the block above is
+   900px, wider than that, so this needs its own query). Without clearance
+   here, .b-hints' last child (the "Esc back to hub" button) lands flush
+   with the viewport bottom — the same spot #rail sits at — and the two
+   fully overlap: confirmed by comparing their getBoundingClientRect() at
+   360px width, which were within a pixel of each other on every edge. */
+@media (max-width: 700px) {
+  .b-hints {
+    padding-bottom: 4.5rem;
+  }
+}
+
 /* ============ threat detail ============ */
 
 #s-threat {
@@ -823,6 +867,15 @@ section:nth-of-type(even) .fact {
   overflow-y: auto;
   padding: 0;
   background: var(--ink);
+}
+
+/* Same rail-sidebar clearance as .b-scene above — .t-band/.t-body/.t-nav
+   are full-width children with their own 6vw horizontal padding, which
+   starts well inside the rail's 200px zone without this. */
+@media (min-width: 701px) {
+  #s-threat {
+    padding-left: 200px;
+  }
 }
 
 .t-band {

@@ -323,6 +323,18 @@ Kerjakan berurutan. **Jangan melompat.** Lapor di akhir setiap fase dan berhenti
 
 `lib/motion/wipe.ts` dan pola kill+cleanup GSAP di `ThreatField.tsx` adalah referensi baik untuk animasi berikutnya — React Strict Mode di dev meng-invoke effect dua kali di setiap mount, jadi tween GSAP dalam `useEffect` wajib punya `gsap.killTweensOf()` di awal dan `tween.kill()` di cleanup, atau animasi bisa macet di tengah jalan.
 
+**Fase 7, slice pertama — audit lebar layar (360px sampai desktop), selesai.** Ditemukan dan diperbaiki tiga bug nyata, bukan cuma di 360px seperti rencana awal, tapi di *semua* lebar ≥701px:
+
+1. `.b-scene` (battle) dan `#s-threat` (threat detail) tidak pernah diberi ruang kiri untuk `#rail` — rail sidebar 200px menutupi command fan, nama halangan, dan konten threat detail di lebar berapa pun ≥701px, bukan cuma di mobile. Diperbaiki dengan `margin-left:200px` + `width:calc(100% - 200px)` pada `.b-scene` (bukan `padding-left` — untuk anak `position:absolute`, containing block-nya adalah *padding edge*, yang tidak bergerak kalau cuma padding yang ditambah; harus geser box-nya sendiri) dan `padding-left:200px` pada `#s-threat` (anaknya flow normal, jadi padding cukup).
+2. `main`/`section` (Project/Skill/About/Contact) punya bug yang sama — `#hub` sudah benar (`padding-left:220px`) tapi ini terlewat saat konten section ditulis. Diperbaiki dengan `padding-left:220px` pada `main` di `min-width:701px`, menyamai pola `#hub`.
+3. `.b-hints` (baris hint keyboard di battle screen) tertutup total oleh `#rail` versi bottom-bar di ≤700px — kedua elemen mendarat di rect yang hampir identik. Diperbaiki dengan `padding-bottom:4.5rem` pada `.b-hints` khusus `max-width:700px`.
+
+Juga: `aria-label="Navigasi utama"` di `Rail.tsx` lolos dari terjemahan Inggris — diperbaiki jadi `"Main navigation"`.
+
+Ketiganya diverifikasi lewat `getBoundingClientRect()` sebelum dan sesudah fix (bukan cuma baca CSS), di 360px dan 1280px. Screenshot piksel untuk battle/threat screen tetap tidak selalu bisa diandalkan di sesi ini — tween GSAP archetype-switch dan wipe kadang membeku di tengah jalan karena `document.hidden` yang sama seperti masalah rendering 3D, jadi setiap kali itu terjadi elemen `.threat`/wipe di-reset manual lewat JS sebelum screenshot diambil untuk memastikan yang difoto adalah state akhir yang sebenarnya, bukan artefak alat.
+
+**Belum dikerjakan dari lingkup fase 7:** audio (SFX CC0 — pemilik akan sourcing file manual dari freesound.org filter CC0 lalu ditaruh di `public/sfx/`, wiring menyusul), gamepad, `sessionStorage` skip-title untuk pengunjung kembali, Lighthouse, OG image. `prefers-reduced-motion` sendiri sudah lengkap (wildcard `*` di CSS + guard di setiap `useEffect` GSAP/R3F) — bukan bagian dari slice ini karena sudah beres sejak fase 4-6.
+
 ---
 
 ## Lantai Kualitas
