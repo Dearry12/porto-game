@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 
 import { initHistory, useNavStore } from '@/lib/nav/store';
@@ -33,8 +33,30 @@ const Scene = dynamic(() => import('../three/Scene').then((m) => m.Scene), { ssr
 export function NavShell({ children }: { children: ReactNode }) {
   const state = useNavStore((s) => s.state);
   const dispatch = useNavStore((s) => s.dispatch);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => initHistory(), []);
+
+  /**
+   * Lighthouse mobile scored 52 with the 3D layer always mounted — traced
+   * to three.js's own bundle cost (a ~380KB chunk, most of it unused by
+   * this scene) plus R3F's continuous per-frame render loop, both landing
+   * squarely in the load window Lighthouse measures. Confirmed by an A/B
+   * build with <Scene /> removed entirely: score jumped to 92, total
+   * blocking time from 1130ms to 0. #rail's own breakpoint (700px) is
+   * reused here rather than picking a new number — mobile already gets a
+   * simplified layout everywhere else in this codebase, and 701px is where
+   * `next/dynamic`'s lazy import for Scene actually fires, since it's never
+   * rendered below that width: no request for the chunk at all, not just a
+   * hidden one.
+   */
+  useEffect(() => {
+    const mql = matchMedia('(min-width: 701px)');
+    setIsDesktop(mql.matches);
+    const onChange = () => setIsDesktop(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle(
@@ -113,9 +135,10 @@ export function NavShell({ children }: { children: ReactNode }) {
         (z-index 30) and #hub/main (z-index 10). #s-title's own background
         is transparent specifically so this shows through it — DESIGN_TWIST.md
         §6 wants the object visible behind the title wordmark, not hidden by
-        an opaque screen backdrop.
+        an opaque screen backdrop. Gated to isDesktop — see the effect above
+        for why mobile skips it entirely rather than just hiding it.
       */}
-      <Scene />
+      {isDesktop && <Scene />}
       <TitleScreen />
       <Rail />
       {/*
